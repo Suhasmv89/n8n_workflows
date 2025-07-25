@@ -1,0 +1,141 @@
+{
+  "active": false,
+  "connections": {
+    "If PDF?": {
+      "main": [
+        [
+          {
+            "node": "Telegram PDF Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Not PDF Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-07-08T23:27:04.443Z",
+  "id": "nuwUYzbpa7qEUZJw",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": {
+          "downloadAttachments": true
+        },
+        "additionalFields": {}
+      },
+      "id": "2f28a1b9-2801-4bb2-853a-0f25bf17bb7d",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        60
+      ],
+      "webhookId": "195ba3c1-9d73-4614-9f7c-882cec9cc0ed"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"document\"][\"mime_type\"]}}",
+              "operation": "contains",
+              "value2": "application/pdf"
+            }
+          ]
+        }
+      },
+      "id": "cc9cb7b0-7010-44c2-9a6d-72a77466e2a4",
+      "name": "If PDF?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json[\"chat\"][\"id\"]}}",
+        "text": "✅ PDF file successfully received!",
+        "additionalFields": {}
+      },
+      "id": "6dcdb22d-aaf8-47d1-a873-a61f80052f63",
+      "name": "Telegram PDF Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -80
+      ],
+      "webhookId": "1b32c0bf-5b1f-417b-b205-a92869ea265d"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json[\"chat\"][\"id\"]}}",
+        "text": "⚠️ This is not a PDF file. Please send a .pdf document.",
+        "additionalFields": {}
+      },
+      "id": "c42865ee-f675-4d4b-bcc9-d2cd026f0d0e",
+      "name": "Telegram Not PDF Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        160
+      ],
+      "webhookId": "71ba45b9-f992-4238-8417-c8f7d82f3341"
+    },
+    {
+      "parameters": {
+        "resource": "channelMessage",
+        "operation": "getAll",
+        "teamId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        220
+      ],
+      "id": "8612e419-61c8-4b74-b73b-d0451c4521b4",
+      "name": "Microsoft Teams",
+      "webhookId": "2ed19aaf-3d19-412d-92ea-c2bc5857213b"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-09T00:17:54.000Z",
+  "versionId": "1928d214-c706-4fd1-a21f-537759307702"
+}
