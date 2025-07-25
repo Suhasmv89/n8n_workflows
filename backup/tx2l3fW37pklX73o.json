@@ -1,0 +1,131 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Prepare Backup Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Backup Info": {
+      "main": [
+        [
+          {
+            "node": "Write Backup Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Backup Files": {
+      "main": [
+        [
+          {
+            "node": "Final Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-04T07:37:23.541Z",
+  "id": "tx2l3fW37pklX73o",
+  "isArchived": true,
+  "meta": null,
+  "name": "FlowBuilder",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -80
+      ],
+      "id": "ac4ae02e-a677-4efa-a520-a74587813183",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "fileSelector": "C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\*.pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        60,
+        -80
+      ],
+      "id": "0d6fa34a-cef7-48ed-b246-4595ea5aff71",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to generate timestamp\nfunction getTimestamp() {\n  const now = new Date();\n  return now.toISOString()\n    .replace(/[:.]/g, '-')\n    .replace('T', '_')\n    .split('.')[0]; // Format: YYYY-MM-DD_HH-MM-SS\n}\n\n// Function to extract filename without extension\nfunction getFileNameWithoutExtension(fullPath) {\n  const fileName = fullPath.split('\\\\').pop() || fullPath.split('/').pop() || fullPath;\n  const lastDotIndex = fileName.lastIndexOf('.');\n  return lastDotIndex > 0 ? fileName.substring(0, lastDotIndex) : fileName;\n}\n\n// Function to get file extension\nfunction getFileExtension(fullPath) {\n  const fileName = fullPath.split('\\\\').pop() || fullPath.split('/').pop() || fullPath;\n  const lastDotIndex = fileName.lastIndexOf('.');\n  return lastDotIndex > 0 ? fileName.substring(lastDotIndex) : '';\n}\n\n// Function to get just the filename from full path\nfunction getFileName(fullPath) {\n  return fullPath.split('\\\\').pop() || fullPath.split('/').pop() || fullPath;\n}\n\n// Process each PDF file\nfor (let i = 0; i < $input.all().length; i++) {\n  const item = $input.all()[i];\n  \n  try {\n    // Get file information\n    const originalPath = item.json.fileName || item.json.filePath || 'unknown';\n    const fileName = getFileName(originalPath);\n    const fileNameWithoutExt = getFileNameWithoutExtension(originalPath);\n    const fileExtension = getFileExtension(originalPath);\n    \n    // Generate timestamp and new filename\n    const timestamp = getTimestamp();\n    const timestampedFileName = `${fileNameWithoutExt}_${timestamp}${fileExtension}`;\n    const backupPath = `C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\backup\\\\${timestampedFileName}`;\n    \n    // Add backup information to item for next node\n    item.json.needsBackup = true;\n    item.json.backupPath = backupPath;\n    item.json.backupFileName = timestampedFileName;\n    item.json.timestamp = timestamp;\n    item.json.originalFileName = fileName;\n    item.json.originalPath = originalPath;\n    item.json.status = `Prepared for backup: ${fileName} → ${timestampedFileName}`;\n    \n    // Log directory creation message on first item\n    if (i === 0) {\n      item.json.logMessage = 'Backup directory will be created: C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\backup';\n    }\n    \n  } catch (error) {\n    const errorMessage = error instanceof Error ? error.message : String(error);\n    item.json.needsBackup = false;\n    item.json.error = errorMessage;\n    item.json.status = `Error preparing file: ${errorMessage}`;\n  }\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        -80
+      ],
+      "id": "fc24ab27-f008-4fc9-8278-4d6a26d620dc",
+      "name": "Prepare Backup Info"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{$json.backupPath}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        500,
+        -80
+      ],
+      "id": "7b761d60-ab92-465d-b378-e19c2a8711b4",
+      "name": "Write Backup Files"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Final processing to add completion status\nfor (const item of $input.all()) {\n  try {\n    if (item.json.needsBackup) {\n      item.json.backupCreated = true;\n      item.json.backupCompleted = true;\n      item.json.finalStatus = `Successfully backed up: ${item.json.originalFileName} → ${item.json.backupFileName}`;\n    } else {\n      item.json.backupCreated = false;\n      item.json.backupCompleted = false;\n      item.json.finalStatus = `Backup skipped: ${item.json.error || 'Unknown error'}`;\n    }\n  } catch (error) {\n    const errorMessage = error instanceof Error ? error.message : String(error);\n    item.json.backupCreated = false;\n    item.json.backupCompleted = false;\n    item.json.finalStatus = `Final processing error: ${errorMessage}`;\n  }\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -80
+      ],
+      "id": "366b6098-192e-4d9f-b971-16afb6c264d5",
+      "name": "Final Status"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-04T12:05:47.000Z",
+  "versionId": "21e6768f-2aa5-456e-8295-05142551aa00"
+}
