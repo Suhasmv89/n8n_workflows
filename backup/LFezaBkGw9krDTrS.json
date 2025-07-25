@@ -1,0 +1,191 @@
+{
+  "active": false,
+  "connections": {
+    "Read PDF Files": {
+      "main": [
+        [
+          {
+            "node": "Write to Backup Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write to Backup Folder": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Final Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read PDF Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "Prepare Move Info": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-07-15T23:16:43.597Z",
+  "id": "LFezaBkGw9krDTrS",
+  "isArchived": false,
+  "meta": null,
+  "name": "File_read",
+  "nodes": [
+    {
+      "parameters": {
+        "command": "=del {{ $('Start').item.json.Folder_path.replace(/\\\\\\\\/g, '\\\\') }}{{ $('Read PDF Files').item.json.fileName }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        -100
+      ],
+      "id": "31630e28-b312-47c0-92ca-eb39babbeb75",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.Folder_path }}{{ $json.File_extension }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -100
+      ],
+      "id": "7c1fd43d-055d-4259-b693-d9c518fd94b2",
+      "name": "Read PDF Files"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{    $('Start').item.json.Folder_backup.replace(/\\\\\\\\/g, '\\\\') +    '\\\\' +    $('Read PDF Files').item.json.fileName.replace(/\\.pdf$/i, '') +    '_' +    $now.toFormat('yyyy-LL-dd_HH-mm-ss') +    '.pdf' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        840,
+        -100
+      ],
+      "id": "977b9c11-c70a-42fe-bb6a-07a23747fef4",
+      "name": "Write to Backup Folder"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Final processing to add completion status\nfor (const item of $input.all()) {\n  try {\n    if (item.json.exitCode == 0) {\n      item.json.moveCompleted = true;\n      item.json.originalDeleted = true;\n      item.json.finalStatus = `Successfully moved and deleted: ${item.json.originalFileName} → ${item.json.timestampedFileName}`;\n      item.json.data = $('Read PDF Files').all();\n      item.binary = item.json.data[0].binary;\n;\n    } else {\n      item.json.moveCompleted = false;\n      item.json.originalDeleted = false;\n      item.json.finalStatus = `Move/Delete skipped: ${item.json.stderr || 'Unknown error'}`;\n    }\n  } catch (error) {\n    const errorMessage = error instanceof Error ? error.message : String(error);\n    item.json.moveCompleted = false;\n    item.json.originalDeleted = false;\n    item.json.finalStatus = `Final processing error: ${errorMessage}`;\n  }\n}\n\nreturn $input.all();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        -100
+      ],
+      "id": "a8b14c80-858f-4071-ac51-cbfe070921c4",
+      "name": "Final Status"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "aa736fa6-1ce7-4e18-afef-e4c196869612",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        240,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "01867bc4-9f1a-417c-8611-0de18697e5c8",
+              "name": "Folder_path",
+              "value": "C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\",
+              "type": "string"
+            },
+            {
+              "id": "50320481-7b19-4bf8-960a-1511f6de2d3b",
+              "name": "File_extension",
+              "value": "*.pdf",
+              "type": "string"
+            },
+            {
+              "id": "e05f169c-2302-45e3-9ce4-21ea586a0d6c",
+              "name": "Folder_backup",
+              "value": "C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\backup",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        -360
+      ],
+      "id": "9999ccc2-20ce-4255-9dd6-77fb67ebf89a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to generate timestamp (today's date and time)\nfunction getTodaysTimestamp() {\n  const now = new Date();\n  return now.toISOString()\n    .replace(/[:.]/g, '-')\n    .replace('T', '_')\n    .split('.')[0]; // Format: YYYY-MM-DD_HH-MM-SS\n}\n\n// Function to get just the filename from full path\nfunction getFileName(fullPath) {\n  return fullPath.split('\\\\').pop() || fullPath.split('/').pop() || fullPath;\n}\n\n// Function to extract filename without extension\nfunction getFileNameWithoutExtension(fullPath) {\n  const fileName = getFileName(fullPath);\n  const lastDotIndex = fileName.lastIndexOf('.');\n  return lastDotIndex > 0 ? fileName.substring(0, lastDotIndex) : fileName;\n}\n\n// Function to get file extension\nfunction getFileExtension(fullPath) {\n  const fileName = getFileName(fullPath);\n  const lastDotIndex = fileName.lastIndexOf('.');\n  return lastDotIndex > 0 ? fileName.substring(lastDotIndex) : '';\n}\n\n// Process each PDF file\nfor (let i = 0; i < $input.all().length; i++) {\n  const item = $input.all()[i];\n  \n  try {\n    // Get file information\n    const originalPath = item.json.fileName || item.json.filePath || 'unknown';\n    const fileName = getFileName(originalPath);\n    const fileNameWithoutExt = getFileNameWithoutExtension(originalPath);\n    const fileExtension = getFileExtension(originalPath);\n    \n    // Generate today's timestamp and new filename\n    const todaysTimestamp = getTodaysTimestamp();\n    const timestampedFileName = `${fileNameWithoutExt}_${todaysTimestamp}${fileExtension}`;\n    const backupPath = `C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\backup\\\\${timestampedFileName}`;\n    \n    // Add move information to item for next node\n    item.json.needsMove = true;\n    item.json.backupPath = backupPath;\n    item.json.timestampedFileName = timestampedFileName;\n    item.json.todaysTimestamp = todaysTimestamp;\n    item.json.originalFileName = fileName;\n    item.json.originalPath = item.binary.data.fileName;\n    item.json.status = `Prepared for move: ${fileName} → ${timestampedFileName}`;\n    \n    // Log directory creation message on first item\n    if (i === 0) {\n      item.json.logMessage = 'Backup directory will be created if needed: C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\backup';\n      item.json.logMessageBinary = item.binary.data;\n    }\n    \n  } catch (error) {\n    const errorMessage = error instanceof Error ? error.message : String(error);\n    item.json.needsMove = false;\n    item.json.error = errorMessage;\n    item.json.status = `Error preparing file: ${errorMessage}`;\n  }\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        -340
+      ],
+      "id": "81cda8ea-ed6f-407a-93d8-13e27e06b6d4",
+      "name": "Prepare Move Info"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-16T09:29:43.000Z",
+  "versionId": "947b001c-408f-4395-ab8a-bc502e64d011"
+}
