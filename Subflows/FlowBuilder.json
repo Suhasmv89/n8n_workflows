@@ -1,0 +1,54 @@
+{
+  "name": "FlowBuilder",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "78ea7d69-9d9c-4fbd-b8b4-72e5859ea410",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\*.pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "07ed13d8-8a85-4831-a98a-9325f1d6aa5d",
+      "name": "Read/Write Files from Disk"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9576676a-10ca-4de2-b632-b5294a1c3f31",
+  "meta": {
+    "instanceId": "deaea2c1ebb861b6c8894f4e25b2f71cb94f49fa75145bca3c219659bfb000e4"
+  },
+  "id": "tx2l3fW37pklX73o",
+  "tags": []
+}
