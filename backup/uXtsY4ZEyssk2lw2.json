@@ -1,0 +1,79 @@
+{
+  "active": false,
+  "connections": {
+    "On clicking 'execute'": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Read PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-07T04:47:15.737Z",
+  "id": "uXtsY4ZEyssk2lw2",
+  "isArchived": true,
+  "meta": null,
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "On clicking 'execute'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -520,
+        20
+      ],
+      "typeVersion": 1,
+      "id": "52501b3c-c5fa-45f1-af3b-3a542982b779"
+    },
+    {
+      "parameters": {},
+      "name": "Read PDF",
+      "type": "n8n-nodes-base.readPDF",
+      "position": [
+        -120,
+        20
+      ],
+      "typeVersion": 1,
+      "id": "102a785b-57fd-426d-af76-2ce1f83bb75b"
+    },
+    {
+      "parameters": {
+        "fileSelector": "C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\*.pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -80
+      ],
+      "id": "b02b3ef8-9da6-4f47-8d5e-4e4358ec00dc",
+      "name": "Read/Write Files from Disk"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-07T23:08:34.000Z",
+  "versionId": "1ecbfe65-bf0e-4d82-82e4-7100868326d2"
+}
