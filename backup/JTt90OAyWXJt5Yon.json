@@ -1,0 +1,285 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Call File_read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call File_read": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-08T15:19:14.085Z",
+  "id": "JTt90OAyWXJt5Yon",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "FlowBuilder",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -100
+      ],
+      "id": "1c884442-a8dd-495f-b6dd-8e233046dcb4",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        940,
+        -100
+      ],
+      "id": "c11679bd-8ddc-4c23-a5ca-409c440c91ac",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "LFezaBkGw9krDTrS",
+          "mode": "list",
+          "cachedResultName": "File_read"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        -100
+      ],
+      "name": "Call File_read",
+      "id": "6e0b444b-4cea-4b1c-812a-b1af036fb77b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "01867bc4-9f1a-417c-8611-0de18697e5c8",
+              "name": "Folder_path",
+              "value": "C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\",
+              "type": "string"
+            },
+            {
+              "id": "50320481-7b19-4bf8-960a-1511f6de2d3b",
+              "name": "File_extension",
+              "value": "*.pdf",
+              "type": "string"
+            },
+            {
+              "id": "e05f169c-2302-45e3-9ce4-21ea586a0d6c",
+              "name": "Folder_backup",
+              "value": "C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\backup",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        -100
+      ],
+      "id": "963418d6-7852-4023-9863-c9f25a24ec8a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert in IBM App Connect message flows.\n\nYou will be given a Component Specification describing nodes of a message flow. Based on this, generate an XML in the following format:\n\n<?xml version=\"1.0\" ?>\n<ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput.msgnode=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute.msgnode=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput.msgnode=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"{MessageFlowName}.msgflow\" nsPrefix=\"{MessageFlowName}.msgflow\">\n  <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n    <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n    <translation xmi:type=\"utility:TranslatableString\" key=\"{MessageFlowName}\" bundleName=\"{MessageFlowName}\" pluginId=\"{MessageFlowName}\"/>\n    <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/{MessageFlowName}/icons/full/obj16/{MessageFlowName}.gif\"/>\n    <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/{MessageFlowName}/icons/full/obj30/{MessageFlowName}.gif\"/>\n    <composition>\n      {NodesXML}\n      {ConnectionsXML}\n    </composition>\n    <stickyBoard>\n      <stickyNote location=\"25,25\">\n        <body xmi:type=\"utility:ConstantString\" string=\"Auto-generated message flow.\"/>\n      </stickyNote>\n    </stickyBoard>\n    <propertyOrganizer/>\n  </eClassifiers>\n</ecore:EPackage>\n\nRules:\n- Replace {MessageFlowName} with the flow name provided (strip '.mfw' if present).\n- For each node:\n  - If Node Type is 'MQInput':\n    <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" queueName=\"{QueueName}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n  - If Node Type is 'Compute':\n    <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" computeMode=\"{ComputeMode}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n  - If Node Type is 'MQOutput':\n    <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" queueName=\"{QueueName}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n\n- Start XPosition at 25 and increment by 150 for each node.\n- NodeIndex starts from 1.\n- Connections: sequentially connect nodes in order of NodeIndex, example:\n  <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_{ConnectionIndex}\" sourceNode=\"FCMComposite_1_{SourceNodeIndex}\" targetNode=\"FCMComposite_1_{TargetNodeIndex}\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n\n- Include <stickyNote> with text: \"Auto-generated message flow.\"\n\nInput:\n{{ $json.text }}\n\nOutput:\nOutput only the completed XML structure. Do not include any explanation or extra text.\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1160,
+        -100
+      ],
+      "id": "fa923a50-fe16-4eb0-9d69-81bbbbcedcad",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        80
+      ],
+      "id": "c39d38d5-c47c-4175-9ad8-0efd35a5ca2d",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "zhJUjQLO4OnrQysr",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "C:\\Personal\\n8n\\Flowbuilder\\msgflow\\test.msgflow",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        240
+      ],
+      "id": "3df08ce9-6f16-4a17-aa0c-aff3225ace1b",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1300,
+        160
+      ],
+      "id": "25e2c95d-84ef-47f9-899d-3bb49ed7075c",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {
+    "Extract from File": [
+      {
+        "json": {
+          "numpages": 1,
+          "numrender": 1,
+          "info": {
+            "PDFFormatVersion": "1.7",
+            "Language": null,
+            "EncryptFilterName": null,
+            "IsLinearized": false,
+            "IsAcroFormPresent": false,
+            "IsXFAPresent": false,
+            "IsCollectionPresent": false,
+            "IsSignaturesPresent": false,
+            "CreationDate": "D:20250611001639",
+            "ModDate": "D:20250611001702Z00'00'",
+            "Producer": "iOS Version 18.4.1 (Build 22E252) Quartz PDFContext, AppendMode 1.1"
+          },
+          "text": "4.3 Component Specification\nNew message flow AccSlfFinTxExtendedRouting.mfw will be created using below nodes\nNode Name #1:\nNode Name ACCSTL.FINTEXTENDED.IN\nNode Type MQInput\nqueueName ACCSTL.FINTEXTENDED.IN\nNode Name #2:\nNode Name AccSlfFinTxExtendedRouting\nNode Type Compute\ncomputeMode Message\nNode Name #3:\nNode Name SPCT.ACCSTL.FINTEXTENDED.OUT\nNode Type MQOutput\nqueueName SPCT.ACCSTL.FINTEXTENDED.OUT",
+          "version": "5.3.31"
+        }
+      }
+    ],
+    "Basic LLM Chain": [
+      {
+        "json": {
+          "text": "<?xml version=\"1.0\" ?>\n  <ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput.msgnode=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute.msgnode=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput.msgnode=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"MyMessageFlow.msgflow\" nsPrefix=\"MyMessageFlow.msgflow\">\n    <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n      <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n      <translation xmi:type=\"utility:TranslatableString\" key=\"MyMessageFlow\" bundleName=\"MyMessageFlow\" pluginId=\"MyMessageFlow\"/>\n      <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/MyMessageFlow/icons/full/obj16/MyMessageFlow.gif\"/>\n      <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/MyMessageFlow/icons/full/obj30/MyMessageFlow.gif\"/>\n      <composition>\n        <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_1\" location=\"25,150\" queueName=\"MyQueue1\">\n          <translation xmi:type=\"utility:ConstantString\" string=\"Node1\"/>\n        </nodes>\n        <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_2\" location=\"405,150\" computeMode=\"Sequential\">\n          <translation xmi:type=\"utility:ConstantString\" string=\"Node2\"/>\n        </nodes>\n        <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_3\" location=\"660,150\" computeMode=\"Parallel\">\n          <translation xmi:type=\"utility:ConstantString\" string=\"Node3\"/>\n        </nodes>\n        <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_4\" location=\"875,150\" queueName=\"MyQueue2\">\n          <translation xmi:type=\"utility:ConstantString\" string=\"Node4\"/>\n        </nodes>\n      </composition>\n      <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_1\" sourceNode=\"FCMComposite_1_1\" targetNode=\"FCMComposite_1_2\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n      <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_2\" sourceNode=\"FCMComposite_1_2\" targetNode=\"FCMComposite_1_3\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n      <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_3\" sourceNode=\"FCMComposite_1_3\" targetNode=\"FCMComposite_1_4\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n      <stickyBoard>\n        <stickyNote location=\"25,25\">\n          <body xmi:type=\"utility:ConstantString\" string=\"MyMessageFlow\"/>\n        </stickyNote>\n      </stickyBoard>\n    </eClassifiers>\n  </ecore:EPackage>"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-17T00:08:25.000Z",
+  "versionId": "83a30727-2532-415a-b17b-bd2ecf51ba7e"
+}
