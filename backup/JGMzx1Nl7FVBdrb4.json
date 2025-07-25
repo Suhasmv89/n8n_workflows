@@ -1,0 +1,438 @@
+{
+  "active": true,
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Create_Queue_Http_Req",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete_Queue_Http_Req2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Queue_Http_Req": {
+      "main": [
+        [
+          {
+            "node": "Create_Json_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete_Queue_Http_Req2": {
+      "main": [
+        [
+          {
+            "node": "Create_Json_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Json_response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-09T08:43:44.414Z",
+  "id": "JGMzx1Nl7FVBdrb4",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "MQ_ChatBot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mq-admin-nlp",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "944575e5-ea1c-4661-abf6-2b4cf28f26cd",
+      "name": "Webhook",
+      "webhookId": "b43447f3-d2fe-4aba-b48e-382d158c23a4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.body }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an assistant that extracts MQ admin actions from natural language. Convert the user's input into JSON with keys: action, queue_name, queue_manager."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ],
+      "id": "d149540f-bee5-4867-9707-824039aca59b",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "=mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        248,
+        220
+      ],
+      "id": "f9dc4601-aff2-4c71-87e9-1972ddbf19dc",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "zhJUjQLO4OnrQysr",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['output'].action }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "24262136-7175-4b79-b7c1-8272a2f70e95"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "586dcc44-c1f0-4f6c-9561-a68cfbbf3510",
+                    "leftValue": "={{ $json['output'].action }}",
+                    "rightValue": "delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "2dcb6e9b-5717-4ce8-8fda-9a615094781b",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://127.0.0.1:9443/ibmmq/rest/v1/admin/qmgr/{{ $json['output'].queue_manager }}/queue\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "ibm-mq-rest-csrf-token",
+              "value": "1122"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n   \"name\": \"{{ $json[''].queue_name }}\",\n   \"type\": \"local\",\n   \"events\" : {\n      \"depth\" : {\n          \"highEnabled\" : true,\n          \"highPercentage\" : 75\n       }\n    },\n   \"storage\" : {\n      \"maximumDepth\" : 1000\n   }\n} ",
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1036,
+        -100
+      ],
+      "id": "a3851edb-62ba-42ab-89f5-81e045ebec10",
+      "name": "Create_Queue_Http_Req",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "uYupxuEi7ZaFmdXW",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1476,
+        0
+      ],
+      "id": "2de6b86c-8096-4a00-9fcd-e9c4c5407579",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \n  \"type\": \"object\",\n  \"properties\": {\n    \"action\": {\n      \"type\": \"string\",\n      \"enum\": [\"delete\", \"create\", \"update\"]\n    },\n    \"queue_name\": {\n      \"type\": \"string\",\n      \"minLength\": 1\n    },\n    \"queue_manager\": {\n      \"type\": \"string\",\n      \"minLength\": 1\n    }\n  },\n  \"required\": [\"action\", \"queue_name\", \"queue_manager\"],\n  \"additionalProperties\": false\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        220
+      ],
+      "id": "df4771d8-69f2-48ed-8cd3-f35015b718f3",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://127.0.0.1:9443/ibmmq/rest/v1/admin/qmgr/{{ $json['output'].queue_manager }}/queue/{{ $json['output'].queue_name }}\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "ibm-mq-rest-csrf-token",
+              "value": "1122"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1036,
+        100
+      ],
+      "id": "a77bd267-8223-4e63-b28e-b91d0629eb35",
+      "name": "Delete_Queue_Http_Req2",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "uYupxuEi7ZaFmdXW",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5ca72c4-8c78-4ab8-a390-31244c5a71cf",
+              "name": "status_Code",
+              "value": "={{ $json.statusCode }}\n",
+              "type": "string"
+            },
+            {
+              "id": "b8ee3c99-c751-44ba-b09f-2e0465a22eff",
+              "name": "message",
+              "value": "={{ $json.statusMessage }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1256,
+        0
+      ],
+      "id": "641277af-5ade-445f-a877-39f9ba445daa",
+      "name": "Create_Json_response"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        200
+      ],
+      "id": "e7a06e71-2c92-431d-9ab6-f0e2d1efe280",
+      "name": "When chat message received",
+      "webhookId": "5231875c-c5fc-4b9b-8dce-b28b62021e05"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "content-type": "application/json",
+            "user-agent": "PostmanRuntime/7.29.2",
+            "accept": "*/*",
+            "postman-token": "d4e4f862-08ea-43f3-b139-29f0e87234b3",
+            "host": "localhost:5678",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-length": "50"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "body": "Delete queue TEST.Q on QMGR01"
+          },
+          "webhookUrl": "http://localhost:5678/webhook-test/mq-admin-nlp",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 2,
+  "updatedAt": "2025-07-25T03:21:05.000Z",
+  "versionId": "e01a470b-c59f-4b76-9ee8-18db3d1a2d15"
+}
