@@ -1,0 +1,158 @@
+{
+  "active": false,
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Read data on Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read data on Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-07T23:10:57.822Z",
+  "id": "0Iy8Lvv8QHGlR7ty",
+  "isArchived": false,
+  "meta": null,
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "channelId": "xxxxxxx",
+        "message": "=Bonjour ! Voici les stats de notre Instagram {{$json[\"Compte\"]}} en ce beau matin du {{$node[\"Date & Time\"].json[\"day_today\"]}} {{$node[\"Date & Time\"].json[\"data\"]}}\nLe nombre de Followers est de : {{$json[\"Followers\"]}}\nNous avons réalisé : {{$json[\"Posts\"]}} posts, \nBravo !",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "position": [
+        720,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "d4bf23cb-3cb5-49b4-ac87-4f722c11c5bb",
+      "credentials": {
+        "mattermostApi": {
+          "id": null,
+          "name": "API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "value": "={{$json[\"date_today\"]}}",
+        "custom": true,
+        "toFormat": "DD-MM-YYYY",
+        "options": {}
+      },
+      "name": "Date & Time",
+      "type": "n8n-nodes-base.dateTime",
+      "position": [
+        340,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "99d2d72c-a13d-41ea-a12e-0d2a9e0267e8"
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 8
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "e6068271-3d86-4cce-b8d2-d7a97029937f"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "sheetId": "sheetID",
+        "range": "cells",
+        "options": {}
+      },
+      "name": "Read data on Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        540,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "165dcb61-7571-423d-a7ff-f5b42188ec31",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": null,
+          "name": "GoogleAPI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "from datetime import datetime\n\n# Define weekdays starting from Sunday (to match JS getDay())\nweekday = [\"Dimanche\", \"Lundi\", \"Mardi\", \"Mercredi\", \"Jeudi\", \"Vendredi\", \"Samedi\"]\n\n# Get today's date and day index\nnow = datetime.now()\niso_date = now.isoformat()\nday_index = (now.weekday() + 1) % 7  # Convert Monday=0 to Sunday=0 style\n\n# Modify first item in items list\nitems[0]['json']['date_today'] = iso_date\nitems[0]['json']['day_today'] = weekday[day_index]\n\n# Return updated items\nreturn items\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -300
+      ],
+      "id": "b1529d2b-04f8-4890-90de-3fd2f52688d5",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-07T23:14:45.000Z",
+  "versionId": "f50f0937-2439-42d3-ae18-deb0384d0fb7"
+}
