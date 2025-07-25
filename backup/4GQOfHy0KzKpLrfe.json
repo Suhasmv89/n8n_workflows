@@ -1,0 +1,164 @@
+{
+  "active": true,
+  "connections": {
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "XML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-07T13:37:20.638Z",
+  "id": "4GQOfHy0KzKpLrfe",
+  "isArchived": true,
+  "meta": null,
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "jsonToxml",
+        "options": {}
+      },
+      "id": "99650a95-d6bb-4952-a652-345e15bd3bfc",
+      "name": "XML",
+      "type": "n8n-nodes-base.xml",
+      "position": [
+        360,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "number",
+              "value": 1
+            }
+          ],
+          "string": [
+            {
+              "name": "string",
+              "value": "my text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c35802bc-4258-439d-b2b8-fb35070dc288",
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        180,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.data }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "content-type",
+                "value": "application/xml"
+              }
+            ]
+          }
+        }
+      },
+      "id": "aee0a22e-f0ab-465e-ac3e-aa430440c32c",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        540,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "path": "test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "4b32839e-041b-4391-a0b0-6aed8da1d90e",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "89fb6783-adc5-4cbc-bacc-dbd7b85df403",
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "localhost:5678",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "en-US,en;q=0.9,kn;q=0.8",
+            "cookie": "ajs_anonymous_id=c862cd63-1556-4d5f-b1cd-e083d1ee5933; rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2BbEvdKqndyKRaiO6S7X8zCjElt9GYS9es%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX19XbJRGz913KvNNtlWLpP1eayYm%2BIYQGNs%3D; n8n-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg5ZDFiN2NmLWNkNzItNGVjMi04YmE1LTY2NjYyMTMxMGJlYiIsImhhc2giOiJTK04vRm5vcFA3IiwiYnJvd3NlcklkIjoiYUxOZ1VQaXZlc1FpamU5NTBRZnRDSFNoNFdlMFhSa212aVN4a1MyNzZocz0iLCJpYXQiOjE3NTE2MTQ2MTgsImV4cCI6MTc1MjIxOTQxOH0.V4YDgRkverpS8Jdd-RyRvvREOUxWKPTGraNjAQt7Nkc; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX19g7%2B0QY%2FzUk7ahRAGHSjojReksrJhP0yU1GEoW5WYixGVbChD3ft5ysIjOQm%2FkfYH%2FdKwlQR1L3w%3D%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX1%2Bw8U19T7TasP80Kx1Utc3G7avlqrsSxV3qio%2BE%2Fd9%2FwNFWQsueO2beuCtBLSe2SFi5DrVIH%2BhrMhXDSHvZ%2FDRoQMmhr%2Fc6Cdu%2FozmBhmNv07gkzvPs1iZaEBzjZYWRYkGjPNnrELlvVoUEzNc6No3aoI7EVgamGME%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX1%2BkydCQqXBFmgZc%2FpXtXl7EfqAhbB0PJxJ4I1%2FNtf84TV5PJ6R9VkUg9pMzB8LAEFhgHB3WQ42zlYA814C367f71TvN6vo3uRtFvMxJm9fygCFRj7brp4qCw%2BtwfQBdxOJEzLnta1OIYQ%3D%3D; ph_phc_4URIAm1uYfJO7j8kWSe0J8lc8IqnstRLS7Jx8NcakHo_posthog=%7B%22distinct_id%22%3A%22deaea2c1ebb861b6c8894f4e25b2f71cb94f49fa75145bca3c219659bfb000e4%2389d1b7cf-cd72-4ec2-8ba5-666621310beb%22%2C%22%24sesid%22%3A%5Bnull%2Cnull%2Cnull%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22http%3A%2F%2Flocalhost%3A5678%2Fsignin%3Fredirect%3D%25252F%22%7D%7D; rl_session=RudderEncrypt%3AU2FsdGVkX1%2BdGD%2FUU3qyyraYfKzWPjj9iA9jZB6%2F81xhr%2BOCl9774nYglzEJwgoRIdYu0%2BVydiHPAZev5lmOavEAUBz7NCByoUHVJ5XV01hY1UOimSW1jTBbs5PIm6r8yrdXqhoDUvYZpZ%2F6fmeMCw%3D%3D"
+          },
+          "params": {},
+          "query": {},
+          "webhookUrl": "http://localhost:5678/webhook-test/test",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-08T14:30:50.000Z",
+  "versionId": "2949f825-6faf-4119-abc9-829fd439e34a"
+}
