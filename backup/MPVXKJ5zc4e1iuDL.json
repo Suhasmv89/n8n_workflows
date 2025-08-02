@@ -1,0 +1,238 @@
+{
+  "active": false,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-08-02T00:21:30.369Z",
+  "id": "MPVXKJ5zc4e1iuDL",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "bot-brew",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "ACE Automation",
+        "formDescription": "AI-assisted ACE 12 development. Requires requirenment pdf as input, converts the requirenment into ACE application with the help of AI and automation.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Requirement Doc",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "You can view your message flow in local folder"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -460,
+        40
+      ],
+      "id": "47a019c2-4355-4547-9ed5-38a864d59fd4",
+      "name": "On form submission",
+      "webhookId": "296fe18b-c6f4-4376-8e0b-f3bbb2fc55fb"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Requirement_Doc",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        40
+      ],
+      "id": "a3c8db94-2c50-46a4-9b8e-294e29f18d1f",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert in IBM App Connect message flows.\n\nYou will be given a Component Specification describing nodes of a message flow. Based on this, generate an XML in the following format:\n\n<?xml version=\"1.0\" ?>\n<ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput.msgnode=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute.msgnode=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput.msgnode=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"{MessageFlowName}.msgflow\" nsPrefix=\"{MessageFlowName}.msgflow\">\n  <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n    <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n    <translation xmi:type=\"utility:TranslatableString\" key=\"{MessageFlowName}\" bundleName=\"{MessageFlowName}\" pluginId=\"{MessageFlowName}\"/>\n    <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/{MessageFlowName}/icons/full/obj16/{MessageFlowName}.gif\"/>\n    <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/{MessageFlowName}/icons/full/obj30/{MessageFlowName}.gif\"/>\n    <composition>\n      {NodesXML}\n      {ConnectionsXML}\n    </composition>\n    <stickyBoard>\n      <stickyNote location=\"25,25\">\n        <body xmi:type=\"utility:ConstantString\" string=\"Auto-generated message flow.\"/>\n      </stickyNote>\n    </stickyBoard>\n    <propertyOrganizer/>\n  </eClassifiers>\n</ecore:EPackage>\n\nRules:\n- Replace {MessageFlowName} with the flow name provided (strip '.mfw' if present).\n- For each node:\n  - If Node Type is 'MQInput':\n    <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" queueName=\"{QueueName}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n  - If Node Type is 'Compute':\n    <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" computeMode=\"{ComputeMode}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n  - If Node Type is 'MQOutput':\n    <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" queueName=\"{QueueName}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n\n- Start XPosition at 25 and increment by 150 for each node.\n- NodeIndex starts from 1.\n- Connections: sequentially connect nodes in order of NodeIndex, example:\n  <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_{ConnectionIndex}\" sourceNode=\"FCMComposite_1_{SourceNodeIndex}\" targetNode=\"FCMComposite_1_{TargetNodeIndex}\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n\n- Include <stickyNote> with text: \"Auto-generated message flow.\"\n\nInput:\n{{ $json.text }}\n\nOutput:\nOutput only the completed XML structure. Do not include any explanation or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        640,
+        -240
+      ],
+      "id": "bc2a28a7-a2c5-4a01-b87a-212a0a52de26",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -320
+      ],
+      "id": "af71180e-b4c6-41f1-926a-4b48b9a7a972",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "zhJUjQLO4OnrQysr",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "C:\\Personal\\n8n\\Flowbuilder\\msgflow\\test.msgflow",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        -240
+      ],
+      "id": "c7715450-302d-4a18-b07d-50694531efe4",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1060,
+        -240
+      ],
+      "id": "9f4907f7-2c03-45f5-8c58-968e1e98909a",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "content": "## Flow Builder Leg\nBuilds ACE12 message flow skeleton",
+        "height": 440,
+        "width": 1300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -460
+      ],
+      "id": "6331c129-f154-412f-ae54-57698420fd73",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        240,
+        60
+      ],
+      "id": "0f3050a1-496b-42b8-be3e-a574e4a7ac3b",
+      "name": "AI Agent1"
+    }
+  ],
+  "pinData": {
+    "AI Agent": [
+      {
+        "json": {
+          "output": " <?xml version=\"1.0\" ?>\n   <ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"AccSlfFinTxExtendedRouting.msgflow\" nsPrefix=\"AccSlfFinTxExtendedRouting.msgflow\">\n     <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n       <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n       <translation xmi:type=\"utility:TranslatableString\" key=\"AccSlfFinTxExtendedRouting\" bundleName=\"AccSlfFinTxExtendedRouting\" pluginId=\"AccSlfFinTxExtendedRouting\"/>\n       <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj16/AccSlfFinTxExtendedRouting.gif\"/>\n       <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj30/AccSlfFinTxExtendedRouting.gif\"/>\n       <composition>\n         <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_1\" location=\"25,150\" queueName=\"ACCSTL.FINTEXTENDED.IN\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"ACCSTL.FINTEXTENDED.IN\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_2\" location=\"25,300\" computeMode=\"Message\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"AccSlfFinTxExtendedRouting\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_3\" location=\"25,450\" queueName=\"SPCT.ACCSTL.FINTEXTENDED.OUT\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"SPCT.ACCSTL.FINTEXTENDED.OUT\"/>\n         </nodes>\n       </composition>\n       <stickyBoard>\n         <stickyNote location=\"25,25\">\n           <body xmi:type=\"utility:ConstantString\" string=\"Auto-generated message flow.\"/>\n         </stickyNote>\n       </stickyBoard>\n       <propertyOrganizer/>\n     </eClassifiers>\n   </ecore:EPackage>"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-02T01:28:04.000Z",
+  "versionId": "89be9a04-9544-4675-bb7e-5a10ada492ae"
+}
