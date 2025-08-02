@@ -48,7 +48,7 @@
   },
   "createdAt": "2025-07-07T23:10:57.822Z",
   "id": "0Iy8Lvv8QHGlR7ty",
-  "isArchived": false,
+  "isArchived": true,
   "meta": null,
   "name": "My workflow 3",
   "nodes": [
@@ -153,6 +153,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-07-07T23:14:45.000Z",
-  "versionId": "f50f0937-2439-42d3-ae18-deb0384d0fb7"
+  "updatedAt": "2025-08-02T00:07:07.000Z",
+  "versionId": "f8643f1d-9c9c-41b2-9af1-b4a14fa411ce"
 }
