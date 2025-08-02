@@ -1,0 +1,19 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2025-07-28T00:10:38.758Z",
+  "id": "4DoTJelUVRoti60R",
+  "isArchived": true,
+  "meta": null,
+  "name": "whatsapp_ai_agent",
+  "nodes": [],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-02T00:06:29.000Z",
+  "versionId": "4bbc373d-922f-4790-ad1f-b0350fdbd7ba"
+}
