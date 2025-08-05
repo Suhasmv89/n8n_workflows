@@ -578,7 +578,7 @@
     },
     {
       "parameters": {
-        "command": "={{ 'mkdir \"C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\' + $('Edit Fields').item.json.application_Name +'\"' }}\n"
+        "command": "={{ 'if not exist \"C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\' + $('Edit Fields').item.json.application_Name + '\" mkdir \"C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\' + $('Edit Fields').item.json.application_Name + '\"' }}"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
@@ -628,6 +628,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-05T03:50:28.000Z",
-  "versionId": "b8e6ccc3-7514-43a2-8f1c-fa24c0fdfb03"
+  "updatedAt": "2025-08-05T04:02:03.000Z",
+  "versionId": "838c79c9-26bd-46b6-bcb5-c9e63dde9f96"
 }
