@@ -168,7 +168,13 @@
     },
     "Read/Write Files from Disk": {
       "main": [
-        []
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Code1": {
@@ -187,6 +193,28 @@
         [
           {
             "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk2",
             "type": "main",
             "index": 0
           }
@@ -588,6 +616,48 @@
       ],
       "id": "c3154a9d-d37e-4da3-bbc8-33dfdd5f8038",
       "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      fileName: $('Edit Fields').first().json.application_Name + '.xml',\n      content: `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<projectDescription>\n\t<name>${$('Edit Fields').first().json.application_Name}</name>\n\t<comment></comment>\n\t<projects>\n\t</projects>\n\t<buildSpec>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibresourcevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.connector.policy.ui.PolicyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.mbprojectbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mlibdfdlbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.adapters.adapterbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.sca.scabuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mbprojectresourcesbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.esql.lang.esqllangbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.map.builder.mslmappingbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowxsltbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.decision.service.ui.decisionservicerulebuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.pattern.capture.PatternBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.json.builder.JSONBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.restapi.ui.restApiDefinitionsBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.policy.ui.policybuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.msg.assembly.messageAssemblyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.dfdlqnamevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.bar.ext.barbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.unittest.ui.TestCaseBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t</buildSpec>\n\t<natures>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.applicationNature</nature>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.messageBrokerProjectNature</nature>\n\t</natures>\n</projectDescription>`\n\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        -400
+      ],
+      "id": "263cf8ee-3156-40a3-828a-e21723aa62aa",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const xmlContent =$input.first().json.content;\n\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(xmlContent).toString('base64'),\n        mimeType: 'application/xml',\n        fileName: '.project',\n      },\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        -360
+      ],
+      "id": "d2c2d179-5314-4fd6-9da9-1fc1c34f8ea8",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ 'C:/Personal/n8n/Flowbuilder/'+$('Edit Fields').item.json.application_Name +'/' + '.project' }}",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        20
+      ],
+      "id": "d82b47eb-3175-4feb-8b4b-53360ff6dbcd",
+      "name": "Read/Write Files from Disk2"
     }
   ],
   "pinData": {
@@ -628,6 +698,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-05T04:02:03.000Z",
-  "versionId": "838c79c9-26bd-46b6-bcb5-c9e63dde9f96"
+  "updatedAt": "2025-08-05T10:18:17.000Z",
+  "versionId": "e6ac01d3-267d-4f50-9066-3b87ddbf8e01"
 }
