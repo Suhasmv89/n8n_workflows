@@ -317,15 +317,15 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ 'C:/Personal/n8n/Flowbuilder/'+$('Edit Fields').item.json.application_Name +'/' + $('Edit Fields').item.json.application_Name + '.msgflow' }}",
+        "fileName": "={{ 'C:/Personal/n8n/'+$('Edit Fields').item.json.application_Name +'/' + $('Edit Fields').item.json.application_Name + '.msgflow' }}",
         "dataPropertyName": "=data",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1160,
-        -400
+        280,
+        -160
       ],
       "id": "c7715450-302d-4a18-b07d-50694531efe4",
       "name": "Read/Write Files from Disk"
@@ -334,7 +334,7 @@
       "parameters": {
         "content": "## Flow Builder Leg\nBuilds ACE12 message flow skeleton",
         "height": 440,
-        "width": 1300
+        "width": 1840
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -598,7 +598,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
+        40,
         -160
       ],
       "id": "f6dff78a-9a8a-4dc8-b636-45885a3578d8",
@@ -606,7 +606,7 @@
     },
     {
       "parameters": {
-        "command": "={{ 'if not exist \"C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\' + $('Edit Fields').item.json.application_Name + '\" mkdir \"C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\' + $('Edit Fields').item.json.application_Name + '\"' }}"
+        "command": "={{ 'if not exist \"C:\\\\Personal\\\\n8n\\\\' + $('Edit Fields').item.json.application_Name + '\" mkdir \"C:\\\\Personal\\\\n8n\\\\' + $('Edit Fields').item.json.application_Name + '\"' }}"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
@@ -624,8 +624,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1380,
-        -400
+        500,
+        -160
       ],
       "id": "263cf8ee-3156-40a3-828a-e21723aa62aa",
       "name": "Code2"
@@ -637,8 +637,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1600,
-        -360
+        680,
+        -160
       ],
       "id": "d2c2d179-5314-4fd6-9da9-1fc1c34f8ea8",
       "name": "Code3"
@@ -646,15 +646,15 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ 'C:/Personal/n8n/Flowbuilder/'+$('Edit Fields').item.json.application_Name +'/' + '.project' }}",
+        "fileName": "={{ 'C:/Personal/n8n/'+$('Edit Fields').item.json.application_Name +'/' + '.project' }}",
         "dataPropertyName": "=data",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1620,
-        20
+        940,
+        -160
       ],
       "id": "d82b47eb-3175-4feb-8b4b-53360ff6dbcd",
       "name": "Read/Write Files from Disk2"
@@ -664,7 +664,7 @@
     "AI Agent": [
       {
         "json": {
-          "output": " <?xml version=\"1.0\" ?>\n   <ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"AccSlfFinTxExtendedRouting.msgflow\" nsPrefix=\"AccSlfFinTxExtendedRouting.msgflow\">\n     <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n       <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n       <translation xmi:type=\"utility:TranslatableString\" key=\"AccSlfFinTxExtendedRouting\" bundleName=\"AccSlfFinTxExtendedRouting\" pluginId=\"AccSlfFinTxExtendedRouting\"/>\n       <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj16/AccSlfFinTxExtendedRouting.gif\"/>\n       <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj30/AccSlfFinTxExtendedRouting.gif\"/>\n       <composition>\n         <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_1\" location=\"25,150\" queueName=\"ACCSTL.FINTEXTENDED.IN\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"ACCSTL.FINTEXTENDED.IN\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_2\" location=\"25,300\" computeMode=\"Message\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"AccSlfFinTxExtendedRouting\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_3\" location=\"25,450\" queueName=\"SPCT.ACCSTL.FINTEXTENDED.OUT\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"SPCT.ACCSTL.FINTEXTENDED.OUT\"/>\n         </nodes>\n       </composition>\n       <stickyBoard>\n         <stickyNote location=\"25,25\">\n           <body xmi:type=\"utility:ConstantString\" string=\"Auto-generated message flow.\"/>\n         </stickyNote>\n       </stickyBoard>\n       <propertyOrganizer/>\n     </eClassifiers>\n   </ecore:EPackage>"
+          "output": "<?xml version=\"1.0\" ?>\n   <ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput.msgnode=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute.msgnode=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput.msgnode=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"AccSlfFinTxExtendedRouting.msgflow\" nsPrefix=\"AccSlfFinTxExtendedRouting.msgflow\">\n     <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n       <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n       <translation xmi:type=\"utility:TranslatableString\" key=\"AccSlfFinTxExtendedRouting\" bundleName=\"AccSlfFinTxExtendedRouting\" pluginId=\"AccSlfFinTxExtendedRouting\"/>\n       <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj16/AccSlfFinTxExtendedRouting.gif\"/>\n       <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj30/AccSlfFinTxExtendedRouting.gif\"/>\n       <composition>\n         <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_1\" location=\"25,150\" queueName=\"ACCSTL.FINTEXTENDED.IN\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"ACCSTL.FINTEXTENDED.IN\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_2\" location=\"25,300\" computeMode=\"Message\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"AccSlfFinTxExtendedRouting\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_3\" location=\"25,450\" queueName=\"SPCT.ACCSTL.FINTEXTENDED.OUT\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"SPCT.ACCSTL.FINTEXTENDED.OUT\"/>\n         </nodes>\n      <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_1\" sourceNode=\"FCMComposite_1_1\" targetNode=\"FCMComposite_1_2\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n     <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_2\" sourceNode=\"FCMComposite_1_2\" targetNode=\"FCMComposite_1_3\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/> \n </composition>\n       <stickyBoard>\n         <stickyNote location=\"25,25\">\n           <body xmi:type=\"utility:ConstantString\" string=\"Auto-generated message flow.\"/>\n         </stickyNote>\n       </stickyBoard>\n       <propertyOrganizer/>\n     </eClassifiers>\n   </ecore:EPackage>"
         }
       }
     ],
@@ -698,6 +698,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-05T10:18:17.000Z",
-  "versionId": "e6ac01d3-267d-4f50-9066-3b87ddbf8e01"
+  "updatedAt": "2025-08-05T23:34:32.000Z",
+  "versionId": "e501d3d4-4423-4f0d-92ff-89ec4c2f0003"
 }
