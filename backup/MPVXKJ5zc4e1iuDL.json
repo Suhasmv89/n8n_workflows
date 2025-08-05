@@ -44,22 +44,11 @@
         ]
       ]
     },
-    "Convert to File": {
-      "main": [
-        [
-          {
-            "node": "Read/Write Files from Disk",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "AI Agent": {
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "XML",
             "type": "main",
             "index": 0
           }
@@ -154,6 +143,55 @@
           }
         ]
       ]
+    },
+    "XML": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        []
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2025-08-02T00:21:30.369Z",
@@ -225,8 +263,7 @@
         -320
       ],
       "id": "bc2a28a7-a2c5-4a01-b87a-212a0a52de26",
-      "name": "AI Agent",
-      "disabled": true
+      "name": "AI Agent"
     },
     {
       "parameters": {
@@ -252,35 +289,18 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "C:\\Personal\\n8n\\Flowbuilder\\msgflow\\test.msgflow",
+        "fileName": "={{ 'C:/Personal/n8n/Flowbuilder/'+$('Edit Fields').item.json.application_Name +'/' + $('Edit Fields').item.json.application_Name + '.msgflow' }}",
         "dataPropertyName": "=data",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        216,
-        -220
+        1160,
+        -400
       ],
       "id": "c7715450-302d-4a18-b07d-50694531efe4",
-      "name": "Read/Write Files from Disk",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "operation": "toText",
-        "sourceProperty": "text",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        -4,
-        -220
-      ],
-      "id": "9f4907f7-2c03-45f5-8c58-968e1e98909a",
-      "name": "Convert to File",
-      "disabled": true
+      "name": "Read/Write Files from Disk"
     },
     {
       "parameters": {
@@ -505,6 +525,69 @@
       ],
       "id": "d4a9095d-517e-439e-811f-975dbdb5fb27",
       "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "=output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -400
+      ],
+      "id": "4ebeea07-a41b-447c-ac85-156334875528",
+      "name": "XML"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3b18f05b-c251-4f8e-aba1-194410bedaa7",
+              "name": "application_Name",
+              "value": "={{ $json['ecore:EPackage'].nsURI.replace('.msgflow','') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        -400
+      ],
+      "id": "1e538ac1-ea78-422c-8e1b-7a46f53145f6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const xmlContent = $('AI Agent').first().json.output;\n\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(xmlContent).toString('base64'),\n        mimeType: 'application/xml',\n        fileName: 'flow.msgflow',\n      },\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -160
+      ],
+      "id": "f6dff78a-9a8a-4dc8-b636-45885a3578d8",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "command": "={{ 'mkdir \"C:\\\\Personal\\\\n8n\\\\Flowbuilder\\\\' + $('Edit Fields').item.json.application_Name +'\"' }}\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -400
+      ],
+      "id": "c3154a9d-d37e-4da3-bbc8-33dfdd5f8038",
+      "name": "Execute Command"
     }
   ],
   "pinData": {
@@ -545,6 +628,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-04T23:27:20.000Z",
-  "versionId": "da1cd7c1-b959-4f69-b61e-90539b65f4a1"
+  "updatedAt": "2025-08-05T03:50:28.000Z",
+  "versionId": "b8e6ccc3-7514-43a2-8f1c-fa24c0fdfb03"
 }
