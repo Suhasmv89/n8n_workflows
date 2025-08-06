@@ -26,7 +26,7 @@
             "index": 0
           },
           {
-            "node": "Basic LLM Chain1",
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
@@ -48,7 +48,7 @@
       "main": [
         [
           {
-            "node": "XML",
+            "node": "Parse to XML",
             "type": "main",
             "index": 0
           }
@@ -144,66 +144,11 @@
         ]
       ]
     },
-    "XML": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "Execute Command",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Read/Write Files from Disk": {
       "main": [
         [
           {
-            "node": "Code2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code1": {
-      "main": [
-        [
-          {
-            "node": "Read/Write Files from Disk",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute Command": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code2": {
-      "main": [
-        [
-          {
-            "node": "Code3",
+            "node": "Create_Default_Project_File",
             "type": "main",
             "index": 0
           }
@@ -215,6 +160,72 @@
         [
           {
             "node": "Read/Write Files from Disk2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse to XML": {
+      "main": [
+        [
+          {
+            "node": "Set application_Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set application_Name": {
+      "main": [
+        [
+          {
+            "node": "Create_Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Folder": {
+      "main": [
+        [
+          {
+            "node": "Create_Binary_File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Binary_File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Default_Project_File": {
+      "main": [
+        [
+          {
+            "node": "Code3",
             "type": "main",
             "index": 0
           }
@@ -287,7 +298,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        -380,
+        -160,
         -320
       ],
       "id": "bc2a28a7-a2c5-4a01-b87a-212a0a52de26",
@@ -301,7 +312,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -292,
+        -72,
         -100
       ],
       "id": "af71180e-b4c6-41f1-926a-4b48b9a7a972",
@@ -311,20 +322,19 @@
           "id": "zhJUjQLO4OnrQysr",
           "name": "Ollama account"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ 'C:/Personal/n8n/'+$('Edit Fields').item.json.application_Name +'/' + $('Edit Fields').item.json.application_Name + '.msgflow' }}",
+        "fileName": "={{ 'C:/Personal/n8n/'+$('Set application_Name').item.json.application_Name +'/' + $('Set application_Name').item.json.application_Name + '.msgflow' }}",
         "dataPropertyName": "=data",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        280,
+        500,
         -160
       ],
       "id": "c7715450-302d-4a18-b07d-50694531efe4",
@@ -334,7 +344,7 @@
       "parameters": {
         "content": "## Flow Builder Leg\nBuilds ACE12 message flow skeleton",
         "height": 440,
-        "width": 1840
+        "width": 2100
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -343,8 +353,7 @@
         -400
       ],
       "id": "6331c129-f154-412f-ae54-57698420fd73",
-      "name": "Sticky Note",
-      "disabled": true
+      "name": "Sticky Note"
     },
     {
       "parameters": {
@@ -363,7 +372,7 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        -380,
+        -160,
         180
       ],
       "id": "55587216-5164-4e96-b4e1-2b949b3b1bab",
@@ -399,7 +408,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        436,
+        660,
         180
       ],
       "id": "bd323b79-3829-417d-a58f-af225f18ec0a",
@@ -419,7 +428,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -292,
+        -72,
         400
       ],
       "id": "91d3423d-489b-4ce5-8717-5004ee307f5b",
@@ -435,7 +444,7 @@
       "parameters": {
         "content": "## Queue Creation leg",
         "height": 440,
-        "width": 1300,
+        "width": 1680,
         "color": 3
       },
       "type": "n8n-nodes-base.stickyNote",
@@ -454,7 +463,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4,
+        216,
         180
       ],
       "id": "97574793-8728-4576-a80f-125cacd54b30",
@@ -467,7 +476,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        216,
+        436,
         180
       ],
       "id": "7ecb902d-fe96-451e-86b4-46ffae4cc8f7",
@@ -482,7 +491,7 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        -560,
+        -340,
         720
       ],
       "id": "cb81da94-d3ed-4ae4-9f5d-fc3fba95b173",
@@ -496,7 +505,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -540,
+        -320,
         900
       ],
       "id": "706ac97a-36b7-4700-98c0-568e97972b11",
@@ -511,13 +520,13 @@
     {
       "parameters": {
         "operation": "toText",
-        "sourceProperty": "text",
+        "sourceProperty": "=text",
         "options": {}
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -180,
+        40,
         720
       ],
       "id": "bf238e7e-1042-460b-a235-fe9c1be5b3a6",
@@ -526,14 +535,14 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "C:\\Personal\\n8n\\Flowbuilder\\msgflow\\test.esql",
+        "fileName": "={{ 'C:/Personal/n8n/'+ $('Extract from File').item.json.text.match(/flow (\\w+)\\.mfw/)[1] +'/' + $('Extract from File').item.json.text.match(/flow (\\w+)\\.mfw/)[1]  + '.esql' }}",
         "dataPropertyName": "=data",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        60,
+        280,
         720
       ],
       "id": "8b7e8855-d673-404e-91c0-f39246e6714d",
@@ -556,17 +565,58 @@
     },
     {
       "parameters": {
+        "jsCode": "const xmlContent =$input.first().json.content;\n\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(xmlContent).toString('base64'),\n        mimeType: 'application/xml',\n        fileName: '.project',\n      },\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        -160
+      ],
+      "id": "d2c2d179-5314-4fd6-9da9-1fc1c34f8ea8",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ 'C:/Personal/n8n/'+$('Set application_Name').item.json.application_Name +'/' + '.project' }}",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        -160
+      ],
+      "id": "d82b47eb-3175-4feb-8b4b-53360ff6dbcd",
+      "name": "Read/Write Files from Disk2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -620,
+        720
+      ],
+      "id": "ee37bf2d-8620-4aea-bfda-44eaa7968c4c",
+      "name": "Wait",
+      "webhookId": "09857e57-77e5-4eda-876d-0018a47e8cda"
+    },
+    {
+      "parameters": {
         "dataPropertyName": "=output",
         "options": {}
       },
       "type": "n8n-nodes-base.xml",
       "typeVersion": 1,
       "position": [
-        160,
+        380,
         -400
       ],
       "id": "4ebeea07-a41b-447c-ac85-156334875528",
-      "name": "XML"
+      "name": "Parse to XML"
     },
     {
       "parameters": {
@@ -585,11 +635,24 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        380,
+        600,
         -400
       ],
       "id": "1e538ac1-ea78-422c-8e1b-7a46f53145f6",
-      "name": "Edit Fields"
+      "name": "Set application_Name"
+    },
+    {
+      "parameters": {
+        "command": "={{ 'if not exist \"C:\\\\Personal\\\\n8n\\\\' + $('Set application_Name').item.json.application_Name + '\" mkdir \"C:\\\\Personal\\\\n8n\\\\' + $('Set application_Name').item.json.application_Name + '\"' }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        820,
+        -400
+      ],
+      "id": "c3154a9d-d37e-4da3-bbc8-33dfdd5f8038",
+      "name": "Create_Folder"
     },
     {
       "parameters": {
@@ -598,66 +661,24 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        40,
+        260,
         -160
       ],
       "id": "f6dff78a-9a8a-4dc8-b636-45885a3578d8",
-      "name": "Code1"
+      "name": "Create_Binary_File"
     },
     {
       "parameters": {
-        "command": "={{ 'if not exist \"C:\\\\Personal\\\\n8n\\\\' + $('Edit Fields').item.json.application_Name + '\" mkdir \"C:\\\\Personal\\\\n8n\\\\' + $('Edit Fields').item.json.application_Name + '\"' }}"
-      },
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
-      "position": [
-        600,
-        -400
-      ],
-      "id": "c3154a9d-d37e-4da3-bbc8-33dfdd5f8038",
-      "name": "Execute Command"
-    },
-    {
-      "parameters": {
-        "jsCode": "return [\n  {\n    json: {\n      fileName: $('Edit Fields').first().json.application_Name + '.xml',\n      content: `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<projectDescription>\n\t<name>${$('Edit Fields').first().json.application_Name}</name>\n\t<comment></comment>\n\t<projects>\n\t</projects>\n\t<buildSpec>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibresourcevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.connector.policy.ui.PolicyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.mbprojectbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mlibdfdlbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.adapters.adapterbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.sca.scabuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mbprojectresourcesbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.esql.lang.esqllangbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.map.builder.mslmappingbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowxsltbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.decision.service.ui.decisionservicerulebuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.pattern.capture.PatternBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.json.builder.JSONBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.restapi.ui.restApiDefinitionsBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.policy.ui.policybuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.msg.assembly.messageAssemblyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.dfdlqnamevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.bar.ext.barbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.unittest.ui.TestCaseBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t</buildSpec>\n\t<natures>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.applicationNature</nature>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.messageBrokerProjectNature</nature>\n\t</natures>\n</projectDescription>`\n\n    }\n  }\n];\n"
+        "jsCode": "return [\n  {\n    json: {\n      fileName: $('Set application_Name').first().json.application_Name + '.xml',\n      content: `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<projectDescription>\n\t<name>${$('Set application_Name').first().json.application_Name}</name>\n\t<comment></comment>\n\t<projects>\n\t</projects>\n\t<buildSpec>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibresourcevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.connector.policy.ui.PolicyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.mbprojectbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mlibdfdlbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.adapters.adapterbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.sca.scabuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mbprojectresourcesbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.esql.lang.esqllangbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.map.builder.mslmappingbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowxsltbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.decision.service.ui.decisionservicerulebuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.pattern.capture.PatternBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.json.builder.JSONBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.restapi.ui.restApiDefinitionsBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.policy.ui.policybuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.msg.assembly.messageAssemblyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.dfdlqnamevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.bar.ext.barbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.unittest.ui.TestCaseBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t</buildSpec>\n\t<natures>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.applicationNature</nature>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.messageBrokerProjectNature</nature>\n\t</natures>\n</projectDescription>`\n\n    }\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        500,
+        720,
         -160
       ],
       "id": "263cf8ee-3156-40a3-828a-e21723aa62aa",
-      "name": "Code2"
-    },
-    {
-      "parameters": {
-        "jsCode": "const xmlContent =$input.first().json.content;\n\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(xmlContent).toString('base64'),\n        mimeType: 'application/xml',\n        fileName: '.project',\n      },\n    },\n  },\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        680,
-        -160
-      ],
-      "id": "d2c2d179-5314-4fd6-9da9-1fc1c34f8ea8",
-      "name": "Code3"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "={{ 'C:/Personal/n8n/'+$('Edit Fields').item.json.application_Name +'/' + '.project' }}",
-        "dataPropertyName": "=data",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        940,
-        -160
-      ],
-      "id": "d82b47eb-3175-4feb-8b4b-53360ff6dbcd",
-      "name": "Read/Write Files from Disk2"
+      "name": "Create_Default_Project_File"
     }
   ],
   "pinData": {
@@ -690,6 +711,13 @@
           "queue_manager": "QM1"
         }
       }
+    ],
+    "Basic LLM Chain1": [
+      {
+        "json": {
+          "text": "CREATE COMPUTE MODULE XMLToJSONConverter\n       CREATE FUNCTION Main() RETURNS BOOLEAN\n       BEGIN\n           DECLARE inputRef REFERENCE TO InputRoot.XMLNSC.{root_element};\n           DECLARE outputRef REFERENCE TO OutputRoot.JSON.Data;\n\n           -- Map fields from XML to JSON\n           CREATE FIELD outputRef.name VALUE inputRef.person.name;\n           CREATE FIELD outputRef.street VALUE inputRef.person.address.street;\n           CREATE FIELD outputRef.age VALUE CAST(inputRef.person.age AS INTEGER);\n\n           RETURN TRUE;\n       END;\n   END MODULE;"
+        }
+      }
     ]
   },
   "settings": {
@@ -698,6 +726,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-05T23:34:32.000Z",
-  "versionId": "e501d3d4-4423-4f0d-92ff-89ec4c2f0003"
+  "updatedAt": "2025-08-06T01:26:05.000Z",
+  "versionId": "e622bf02-6913-42cd-96d8-211c83ee58a2"
 }
