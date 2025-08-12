@@ -1,0 +1,51 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2025-08-12T01:24:42.706Z",
+  "id": "2V7iKq01xHDYPunN",
+  "isArchived": false,
+  "meta": null,
+  "name": "GoogleSheets->Email:Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1c5b2ef5-e883-42e0-98f0-b0e1aa03fcd1",
+      "name": "Google Sheets Trigger"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-12T01:25:05.000Z",
+  "versionId": "fe271f45-9db8-4ddb-96bf-cc333f124e41"
+}
