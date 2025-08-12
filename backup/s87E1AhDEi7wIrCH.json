@@ -27,6 +27,35 @@
       "main": [
         [
           {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack": {
+      "main": [
+        [
+          {
             "node": "Google Sheets",
             "type": "main",
             "index": 0
@@ -97,19 +126,15 @@
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYJAI5N5x6ICxOnqUPgO9iqjWBXfYSMGD33eDm5tMqE/edit#gid=0"
         },
         "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
+          "mappingMode": "defineBelow",
+          "value": {
+            "City": "={{ $('Code').item.json.City }}",
+            "Temperature": "={{ $('Code').item.json.Temperature }}",
+            "Weather": "={{ $('Code').item.json.Weather }}",
+            "Date": "={{ $('Code').item.json.Date }}"
+          },
           "matchingColumns": [],
           "schema": [
-            {
-              "id": "Sl No",
-              "displayName": "Sl No",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
             {
               "id": "City",
               "displayName": "City",
@@ -120,13 +145,14 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "Temprature",
-              "displayName": "Temprature",
+              "id": "Temperature",
+              "displayName": "Temperature",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "Weather",
@@ -155,8 +181,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        660,
-        0
+        1120,
+        40
       ],
       "id": "4506c54c-cf57-48d1-8cc5-577e30e94b27",
       "name": "Google Sheets",
@@ -166,6 +192,66 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09ARJGA8EL",
+          "mode": "id"
+        },
+        "text": "={{ $json.City }} + 'temperature is' +{{ $json.Temperature }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        900,
+        -40
+      ],
+      "id": "b4f89ac9-8bf2-4ea5-84da-fe07b15d5d82",
+      "name": "Slack",
+      "webhookId": "0ce7e945-ff07-4a94-bb22-e49a0b50e202",
+      "credentials": {
+        "slackApi": {
+          "id": "qZm8njhgcr1F27G4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cfe2e409-90b2-49a9-9962-25fed1a8ce7e",
+              "leftValue": "={{ $json.Temperature }}",
+              "rightValue": 27,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "2726e46e-2f63-4bf4-90cb-7625b94daa0c",
+      "name": "If"
     }
   ],
   "pinData": {},
@@ -175,6 +261,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-12T06:00:25.000Z",
-  "versionId": "0579717f-be6b-4bd1-bcdf-a9895639ce6d"
+  "updatedAt": "2025-08-12T06:47:01.000Z",
+  "versionId": "ea625722-eb2e-4648-839b-b8fd47f1b094"
 }
