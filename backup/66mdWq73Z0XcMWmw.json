@@ -1,0 +1,672 @@
+{
+  "active": false,
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        []
+      ]
+    },
+    "Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-11T11:12:24.270Z",
+  "id": "66mdWq73Z0XcMWmw",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 8",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9f076db6-ba15-49a1-b1fb-a42c7fe304b6",
+      "name": "When chat message received",
+      "webhookId": "8138597f-c55a-41c0-8469-9fc044bc23a4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI assistant that can read and interpret data from a connected Google Sheet Tools named \"interest_details\".\nThe Google Sheets tool will return the live sheet data when you query it.\n\nThe sheet has the following columns:\n- Sl No: Serial number of the entry.\n- Party: Name or identifier of the person/entity.\n- Amount: Loan amount.\n- Type: Payment type (e.g., Monthly, Fund).\n- Interest Rate: Rate of interest in %.\n- Monthly Int: Monthly interest amount in ₹.\n- Phone Number: Contact number of the party.\n- Date: Loan start date.\n- Monthly payment status columns for different months (e.g., Apr 2025, May 2025, Jun 2025, ... Dec 2025) which may contain:\n  - \"Paid\" → payment received for that month.\n  - \"Pending\" → payment not yet received.\n  - Text like \"Collect 20k\" → indicates partial payment or special note.\n\nYour tasks:\n1. Read and interpret the sheet data using the Google Sheets tool when needed.\n2. Answer questions such as:\n   - Total interest to collect in a given month.\n   - Parties with pending payments for a given month.\n   - Payment history for a specific party.\n   - Contact details for a party.\n   - Loan details (amount, rate, start date) for a party.\n3. Always pull real data from the Google Sheets tool; do not make up values.\n4. Clearly mention if no data is found for a requested month or party.\n5. When partial payment notes appear, explain them in plain language.\n6. Provide concise, clear, and actionable responses.\n\nWhen the user asks a question, determine what sheet data is needed, query the Google Sheets tool, then use the results to answer.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        160,
+        220
+      ],
+      "id": "b23a59e1-20fd-47a4-8dea-409fdd67d5aa",
+      "name": "AI Agent",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3-4b:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        180,
+        440
+      ],
+      "id": "dc9404b9-6ac4-42a7-bf14-7fcd5891d3d6",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "O02TlhvgEZhdG3Lu",
+          "name": "OpenRouter account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        440
+      ],
+      "id": "ae1d4c53-4d62-44b8-8a9b-c970a6ffa932",
+      "name": "Simple Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1czO3Fb4YTAfNPl78KrATTcZarrT_j3-ySFni65MsRYs/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1czO3Fb4YTAfNPl78KrATTcZarrT_j3-ySFni65MsRYs/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        320,
+        440
+      ],
+      "id": "dbbbeb09-399d-4253-8e52-35f562b773b8",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1czO3Fb4YTAfNPl78KrATTcZarrT_j3-ySFni65MsRYs/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1czO3Fb4YTAfNPl78KrATTcZarrT_j3-ySFni65MsRYs/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        -200
+      ],
+      "id": "ecec0800-e8de-4d57-acf3-7546e2199c65",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=SlNo: {{$json[\"Sl No\"]}}\nParty: {{$json[\"Party\"]}}\nAmount: {{$json[\"Amount\"]}}\nType: {{$json[\"Type\"]}}\nInterestRate: {{$json[\"Interest Rate\"]}}\nMonthlyInt: {{$json[\"Monthly Int\"]}}\nPhoneNumber: {{$json[\"Phone Number\"]}}\nDate: {{$json[\"Date\"]}}\nApr2025: {{$json[\"Apr 2025\"]}}\nMay2025: {{$json[\"May 2025\"]}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        -200
+      ],
+      "id": "5ed1ca53-c33c-482c-ac55-3cd8c30bd861",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI assistant that answers questions based on the Google Sheet data that you have received from the previous node.\nThe sheet contains columns for loan details and monthly payment statuses.\nAlways use the sheet data in memory to answer questions like:\n- Who has pending payments for a given month?\n- What is the total interest to collect in a month?\n- Loan details for a party\n- Contact number for a party\nNever guess or make up data. If a record is not found, say so.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        400,
+        40
+      ],
+      "id": "eee5a4c6-8434-4dbe-8805-cd6b162ac84e",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "agentica-org/deepcoder-14b-preview:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        440,
+        260
+      ],
+      "id": "e6471889-896c-4410-833c-47c85ed92ea1",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "O02TlhvgEZhdG3Lu",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Google Sheets2": [
+      {
+        "json": {
+          "row_number": 3,
+          "Sl No": 1,
+          "Party": "Keerthi",
+          "Amount": 120000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 2400,
+          "Phone Number": 9886526330,
+          "Date": "06-02-2023",
+          "Apr 2025": "Pending",
+          "Mar 2025": "Pending",
+          "Jun 2025": "Pending",
+          "Jul 2025": "Pending",
+          "Aug 2025": "Pending",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 4,
+          "Sl No": 2,
+          "Party": "Mubarak_Helper_abdulla(Phone Pe)",
+          "Amount": 100000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.025,
+          "Monthly Interest ": 2500,
+          "Phone Number": 9481330068,
+          "Date": "30-05-2024",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 5,
+          "Sl No": 3,
+          "Party": "Mahendra Naveen friend",
+          "Amount": 200000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 4000,
+          "Phone Number": 9844161194,
+          "Date": "06-06-2024(3)",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Pending",
+          "Aug 2025": "Pending",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 6,
+          "Sl No": 4,
+          "Party": "Mujahid(phone pe)",
+          "Amount": 200000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.025,
+          "Monthly Interest ": 5000,
+          "Phone Number": 9620404599,
+          "Date": "09-08-2024",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "paid",
+          "Aug 2025": "Paid",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 7,
+          "Sl No": 5,
+          "Party": "Farooq(Gpay)",
+          "Amount": 100000,
+          "Type": "Fund",
+          "Intreset Rate": "",
+          "Monthly Interest ": 0,
+          "Phone Number": "",
+          "Date": "",
+          "Apr 2025": "Pending",
+          "Mar 2025": "Pending",
+          "Jun 2025": "Collect 20k and close it",
+          "Jul 2025": "Collect 20k and close it",
+          "Aug 2025": "Collect 20k and close it",
+          "Sep 2025": "Collect 20k and close it",
+          "Oct 2025": "Collect 20k and close it",
+          "Nov 2025": "Collect 20k and close it",
+          "Dec 2025": "Collect 20k and close it"
+        }
+      },
+      {
+        "json": {
+          "row_number": 8,
+          "Sl No": 6,
+          "Party": "Mahendra Naveen friend",
+          "Amount": 300000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 6000,
+          "Phone Number": 9844161194,
+          "Date": "31-08-2024(3)",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Pending",
+          "Aug 2025": "Pending",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 9,
+          "Sl No": 7,
+          "Party": "Yathindra(Bhagirath)",
+          "Amount": 100000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.025,
+          "Monthly Interest ": 2500,
+          "Phone Number": 8310004755,
+          "Date": "05-11-2024",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "Paid",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 10,
+          "Sl No": 8,
+          "Party": "Raaghu",
+          "Amount": 200000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 4000,
+          "Phone Number": 9008877134,
+          "Date": "02-12-2024",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "Paid",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 11,
+          "Sl No": 9,
+          "Party": "Naveen",
+          "Amount": 300000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 6000,
+          "Phone Number": 9886288879,
+          "Date": "05-10-2024",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Pending",
+          "Jul 2025": "Pending",
+          "Aug 2025": "Pending",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 12,
+          "Sl No": 10,
+          "Party": "Shekar friend(Vishwanath)",
+          "Amount": 500000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.03,
+          "Monthly Interest ": 15000,
+          "Phone Number": 9845333525,
+          "Date": "22-02-2025",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 13,
+          "Sl No": 11,
+          "Party": "Saleem Mubarak -30",
+          "Amount": 30000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 600,
+          "Phone Number": 7022347157,
+          "Date": "25-03-2025",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Pending",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 14,
+          "Sl No": 12,
+          "Party": "Naveen Medical",
+          "Amount": 50000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.025,
+          "Monthly Interest ": 1250,
+          "Phone Number": 9008382044,
+          "Date": "25-04-2025",
+          "Apr 2025": "Paid",
+          "Mar 2025": "Paid",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 15,
+          "Sl No": 13,
+          "Party": "Naveen",
+          "Amount": 200000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 4000,
+          "Phone Number": 9886288879,
+          "Date": "07-05-2025",
+          "Apr 2025": "NA",
+          "Mar 2025": "Na",
+          "Jun 2025": "Pending",
+          "Jul 2025": "Pending",
+          "Aug 2025": "Pending",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 16,
+          "Sl No": 14,
+          "Party": "Zubair",
+          "Amount": 100000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.025,
+          "Monthly Interest ": 2500,
+          "Phone Number": 9900622012,
+          "Date": "14-05-2025",
+          "Apr 2025": "Na",
+          "Mar 2025": "Na",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "Paid",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 17,
+          "Sl No": 15,
+          "Party": "Saleem (Mubarak) -50",
+          "Amount": 50000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.025,
+          "Monthly Interest ": 1250,
+          "Phone Number": 9845643144,
+          "Date": "24-05-2025",
+          "Apr 2025": "NA",
+          "Mar 2025": "NA",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 18,
+          "Sl No": 16,
+          "Party": "krishna(Akilesh)",
+          "Amount": 50000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 1000,
+          "Phone Number": 9739597466,
+          "Date": "12-06-2025",
+          "Apr 2025": "NA",
+          "Mar 2025": "NA",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 19,
+          "Sl No": 17,
+          "Party": "Hemavathi(Akilesh)",
+          "Amount": 200000,
+          "Type": "Monthly",
+          "Intreset Rate": 0.02,
+          "Monthly Interest ": 4000,
+          "Phone Number": 8904180600,
+          "Date": "20-06-2025",
+          "Apr 2025": "NA",
+          "Mar 2025": "NA",
+          "Jun 2025": "Paid",
+          "Jul 2025": "Paid",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      },
+      {
+        "json": {
+          "row_number": 20,
+          "Sl No": 18,
+          "Party": "Zubair",
+          "Amount": 100000,
+          "Type": "Fund",
+          "Intreset Rate": "",
+          "Monthly Interest ": 0,
+          "Phone Number": "",
+          "Date": "12-07-2025",
+          "Apr 2025": "",
+          "Mar 2025": "",
+          "Jun 2025": "",
+          "Jul 2025": "",
+          "Aug 2025": "",
+          "Sep 2025": "",
+          "Oct 2025": "",
+          "Nov 2025": "",
+          "Dec 2025": ""
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-11T12:58:32.000Z",
+  "versionId": "e22cf9ff-b237-4a1a-9109-c03561a835f1"
+}
