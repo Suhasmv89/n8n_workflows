@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Google Sheets Trigger": {
       "main": [
@@ -112,9 +112,15 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Google Sheets Trigger": {
+      "documentId": "1J1-cCA_BxuvYb2KNxn0BUKm97jem6J6mcecGrRYHcoc",
+      "sheetId": 0,
+      "lastIndexChecked": 5
+    }
+  },
   "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2025-08-12T01:42:59.000Z",
+  "triggerCount": 1,
+  "updatedAt": "2025-08-12T05:08:46.000Z",
   "versionId": "a450d376-332d-47ef-831b-c2f612a4b72d"
 }
