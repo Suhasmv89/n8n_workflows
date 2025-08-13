@@ -99,7 +99,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    City: $json.name,\n    Temperature: $json.main.temp,\n    Weather: $json.weather[0].description,\n    Date: new Date().toLocaleString()\n  }\n}];\n"
+        "jsCode": "// Convert raw API data into clean object\nconst tempC = $json.main.temp;\nconst tempF = (tempC * 9/5) + 32;\n\nreturn [{\n  json: {\n    city: $json.name,\n    temperature_celsius: tempC.toFixed(1),\n    temperature_fahrenheit: tempF.toFixed(1),\n    condition: $json.weather[0].description,\n    feels_like: $json.main.feels_like.toFixed(1),\n    humidity: $json.main.humidity,\n    date_checked: new Date().toISOString()\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -128,10 +128,13 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "City": "={{ $('Code').item.json.City }}",
-            "Temperature": "={{ $('Code').item.json.Temperature }}",
-            "Weather": "={{ $('Code').item.json.Weather }}",
-            "Date": "={{ $('Code').item.json.Date }}"
+            "City": "={{ $('Code').item.json.city }}",
+            "Temp °C": "={{ $('Code').item.json.temperature_celsius }}",
+            "Temp °F": "={{ $('Code').item.json.temperature_fahrenheit }}",
+            "Condition": "={{ $('Code').item.json.condition }}",
+            "Feels Like °C": "={{ $('Code').item.json.feels_like }}",
+            "Humidity %": "={{ $('Code').item.json.humidity }}",
+            "Date Checked": "={{ $('Code').item.json.date_checked }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -145,8 +148,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "Temperature",
-              "displayName": "Temperature",
+              "id": "Temp °C",
+              "displayName": "Temp °C",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -155,22 +158,54 @@
               "removed": false
             },
             {
-              "id": "Weather",
-              "displayName": "Weather",
+              "id": "Temp °F",
+              "displayName": "Temp °F",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
-              "id": "Date",
-              "displayName": "Date",
+              "id": "Condition",
+              "displayName": "Condition",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Feels Like °C",
+              "displayName": "Feels Like °C",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Humidity %",
+              "displayName": "Humidity %",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date Checked",
+              "displayName": "Date Checked",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -201,7 +236,7 @@
           "value": "C09ARJGA8EL",
           "mode": "id"
         },
-        "text": "={{ $json.City }} + 'temperature is' +{{ $json.Temperature }}",
+        "text": "=☁ Weather in {{$json[\"city\"]}}: {{$json[\"temperature_celsius\"]}}°C / {{$json[\"temperature_fahrenheit\"]}}°F\nCondition: {{$json[\"condition\"]}} | Feels like: {{$json[\"feels_like\"]}}°C\nHumidity: {{$json[\"humidity\"]}}%\n",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
@@ -261,6 +296,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-12T06:47:01.000Z",
-  "versionId": "ea625722-eb2e-4648-839b-b8fd47f1b094"
+  "updatedAt": "2025-08-12T23:53:29.000Z",
+  "versionId": "84ce29ad-b507-476f-9519-7f9faf78786f"
 }
