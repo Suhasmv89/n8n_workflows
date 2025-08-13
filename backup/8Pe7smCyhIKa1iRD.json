@@ -107,7 +107,6 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id": 0,
             "city": "={{ $json.city }}",
             "weather": "={{ $json }}",
             "news": "={{ $json }}",
@@ -125,7 +124,7 @@
               "display": true,
               "type": "number",
               "canBeUsedToMatch": true,
-              "removed": false
+              "removed": true
             },
             {
               "id": "city",
@@ -198,6 +197,6 @@
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2025-08-13T04:44:30.000Z",
-  "versionId": "f94ec8dc-bb6e-4806-ae6a-dbf9b6b212d4"
+  "updatedAt": "2025-08-13T08:27:35.000Z",
+  "versionId": "eba64dbd-8655-400c-8bb0-4c5cc3b4f3e1"
 }
