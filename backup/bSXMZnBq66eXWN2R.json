@@ -1,0 +1,223 @@
+{
+  "active": false,
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-13T00:28:59.713Z",
+  "id": "bSXMZnBq66eXWN2R",
+  "isArchived": true,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "error-handling-logging",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2e6455aa-a28f-4d44-8385-0754524d44ef",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1e088ee7-5234-4136-ab88-5ae6268af73f",
+              "name": "Workflow name:",
+              "value": "={{$json.workflow.name}}",
+              "type": "string"
+            },
+            {
+              "id": "439c3a08-1606-4168-91bf-b5cfb7095e9f",
+              "name": "Error message:",
+              "value": "={{$json.execution.error.message}}",
+              "type": "string"
+            },
+            {
+              "id": "ef3b4925-189c-4526-9c15-3ef713c692f8",
+              "name": "Error stack:",
+              "value": "={{$json.execution.error.stack}}",
+              "type": "string"
+            },
+            {
+              "id": "6329f524-b86c-4df2-8d02-24e8f90c53b4",
+              "name": "Failed node:",
+              "value": "={{$json.execution.node.name}}",
+              "type": "string"
+            },
+            {
+              "id": "ee251b40-84b8-4049-a423-19d81f96c74a",
+              "name": "Timestamp",
+              "value": "={{new Date().toISOString()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "d0d434f6-e884-42b1-9ecf-ade59ba02693",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09ARJGA8EL",
+          "mode": "id"
+        },
+        "text": "=🚨 n8n Workflow Failed! Workflow: {{$json[\"Workflow name\"]}} Node: {{$json[\"Failed node\"]}} Error: {{$json[\"Error message\"]}} Time: {{$json[\"Timestamp\"]}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        440,
+        0
+      ],
+      "id": "6fcd320b-02a0-4e41-babf-e3329c1556ec",
+      "name": "Slack",
+      "webhookId": "7e7f3a86-b2c9-4aa0-add9-00efe81121e2",
+      "credentials": {
+        "slackApi": {
+          "id": "qZm8njhgcr1F27G4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1I7smdJ2vFI7unJE_aA0v__lul3Di7tyQ6BfKX_qsM2s/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1I7smdJ2vFI7unJE_aA0v__lul3Di7tyQ6BfKX_qsM2s/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow Name": "={{ $('Edit Fields').item.json[\"Workflow name:\"] }}",
+            "Error Message": "={{ $('Edit Fields').item.json[\"Error message:\"] }}",
+            "Failed Node": "={{ $('Edit Fields').item.json[\"Failed node:\"] }}",
+            "Timestamp": "={{ $('Edit Fields').item.json.Timestamp }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Workflow Name",
+              "displayName": "Workflow Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Failed Node",
+              "displayName": "Failed Node",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        660,
+        0
+      ],
+      "id": "674a05b0-7d19-4e8d-8875-dfe890aa55a6",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-13T03:18:21.000Z",
+  "versionId": "46f5d429-f974-40b4-891d-2cd25a29d8ed"
+}
