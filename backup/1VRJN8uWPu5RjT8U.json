@@ -243,8 +243,7 @@
           "mode": "id"
         },
         "text": "={{$json[\"report\"]}}",
-        "otherOptions": {},
-        "path": "7bdd89c5-07d2-4fe1-8a8e-10af8d31e694"
+        "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.3,
@@ -288,7 +287,7 @@
     },
     {
       "parameters": {
-        "url": "https://api.openweathermap.org/data/2.5/weather?q=Mysore&appid=d23cadecd95b496f82841a2b20ef6458&units=metric",
+        "url": "=https://api.openweathermap.org/data/2.5/weather?q=London&appid=d23cadecd95b496f82841a2b20ef6458&units=metric",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -319,7 +318,8 @@
         "rule": {
           "interval": [
             {
-              "triggerAtHour": 8
+              "field": "minutes",
+              "minutesInterval": 1
             }
           ]
         }
@@ -336,11 +336,17 @@
   ],
   "pinData": {},
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "jMhfL4qr6mn61Pxu"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2025-08-13T00:22:24.828Z",
-  "versionId": "d3cb5c12-0b34-4b09-b09a-bc67905f2883"
+  "triggerCount": 1,
+  "updatedAt": "2025-08-13T03:27:13.000Z",
+  "versionId": "164e49d3-05f2-4838-b262-d230b8b3d07c"
 }
