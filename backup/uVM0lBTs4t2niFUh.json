@@ -587,7 +587,9 @@
   ],
   "pinData": {},
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "staticData": {
     "node:Schedule Trigger": {
@@ -596,6 +598,6 @@
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2025-07-28T00:07:36.000Z",
-  "versionId": "126a91b4-e213-43f3-96b2-49a0f32f64c3"
+  "updatedAt": "2025-08-13T00:24:56.000Z",
+  "versionId": "0eb6e978-efd1-41d4-b2d2-ebb00c14e85c"
 }
