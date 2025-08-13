@@ -1,0 +1,345 @@
+{
+  "active": false,
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Slack": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "News Data": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weather Data": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "News Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Weather Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-13T00:20:02.803Z",
+  "id": "flTekJtUJbp8sHMY",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "scheduled-city-report",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Convert raw API data into clean object\nconst tempC = $json.main.temp;\nconst tempF = (tempC * 9/5) + 32;\n\nreturn [{\n  json: {\n    city: $json.name,\n    temperature_celsius: tempC.toFixed(1),\n    temperature_fahrenheit: tempF.toFixed(1),\n    condition: $json.weather[0].description,\n    feels_like: $json.main.feels_like.toFixed(1),\n    humidity: $json.main.humidity,\n    date_checked: new Date().toISOString()\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        40
+      ],
+      "id": "694d5865-ac86-49be-9f7a-ad728699b0aa",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1qYJAI5N5x6ICxOnqUPgO9iqjWBXfYSMGD33eDm5tMqE/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYJAI5N5x6ICxOnqUPgO9iqjWBXfYSMGD33eDm5tMqE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "City": "={{ $('Code').item.json.city }}",
+            "Temp °C": "={{ $('Code').item.json.temperature_celsius }}",
+            "Temp °F": "={{ $('Code').item.json.temperature_fahrenheit }}",
+            "Condition": "={{ $('Code').item.json.condition }}",
+            "Feels Like °C": "={{ $('Code').item.json.feels_like }}",
+            "Humidity %": "={{ $('Code').item.json.humidity }}",
+            "Date Checked": "={{ $('Code').item.json.date_checked }}",
+            "Top Headlines": "={{ $('Code1').item.json.report }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Temp °C",
+              "displayName": "Temp °C",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Temp °F",
+              "displayName": "Temp °F",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Condition",
+              "displayName": "Condition",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Feels Like °C",
+              "displayName": "Feels Like °C",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Humidity %",
+              "displayName": "Humidity %",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date Checked",
+              "displayName": "Date Checked",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Top Headlines",
+              "displayName": "Top Headlines",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1320,
+        -60
+      ],
+      "id": "59bb445b-152b-42ba-b700-c5b00081ba68",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09ARJGA8EL",
+          "mode": "id"
+        },
+        "text": "={{$json[\"report\"]}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1100,
+        -60
+      ],
+      "id": "25e838be-fbd0-4775-84bd-f8430ad76021",
+      "name": "Slack",
+      "webhookId": "af6eb219-5ca6-4bef-9142-24d0991ae702",
+      "credentials": {
+        "slackApi": {
+          "id": "qZm8njhgcr1F27G4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        660,
+        -60
+      ],
+      "id": "5e173bbe-5962-433c-94c1-f665a076a512",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const weather = $items(\"Weather Data\")[0].json;\nconst news = $items(\"News Data\");\n\nlet headlines = news.map(item => `• ${item.json.title} (${item.json.source.name})`).join(\"\\n\");\n\nreturn [{\n  json: {\n    report: `🌍 City Report: ${weather.city}\n🌡 Temp: ${weather.temperature_celsius}°C / ${weather.temperature_fahrenheit}°F\n🌤 Condition: ${weather.condition}\n💧 Humidity: ${weather.humidity}%\n📰 Latest News:\n${headlines}`\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -60
+      ],
+      "id": "267339a4-436d-4936-bade-bf5e358bfa37",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather?q=Mysore&appid=d23cadecd95b496f82841a2b20ef6458&units=metric",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        -160
+      ],
+      "id": "ba955225-50bb-4e0b-ae31-a50dacfd3987",
+      "name": "News Data"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather?q=Mysore&appid=db8b65f584c022e56204bafc866e489b&units=metric",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        40
+      ],
+      "id": "7f1805ba-2767-4514-b613-f2c28d6428ce",
+      "name": "Weather Data"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -80
+      ],
+      "id": "c387a924-d93b-4a0c-bc74-a7d779b99b89",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-13T00:20:53.000Z",
+  "versionId": "87bad16f-7984-43b3-96b5-b0b6b253ad14"
+}
