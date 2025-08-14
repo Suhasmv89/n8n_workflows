@@ -232,7 +232,8 @@
           "id": "oiWhzThVRrIrZewd",
           "name": "Google Sheets account"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -242,7 +243,7 @@
           "value": "C09ARJGA8EL",
           "mode": "id"
         },
-        "text": "={{$json[\"report\"]}}",
+        "text": "={{($json.LatestNews.toJsonString())}}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
@@ -274,7 +275,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const weather = $items(\"Weather Data\")[0].json;\nconst news = $items(\"News Data\");\n\nlet headlines = news.map(item => `• ${item.json.title} (${item.json.source.name})`).join(\"\\n\");\n\nreturn [{\n  json: {\n    report: `🌍 City Report: ${weather.city}\n🌡 Temp: ${weather.temperature_celsius}°C / ${weather.temperature_fahrenheit}°F\n🌤 Condition: ${weather.condition}\n💧 Humidity: ${weather.humidity}%\n📰 Latest News:\n${headlines}`\n  }\n}];\n"
+        "jsCode": "//const weather = $input.first().json;$input.first().json.city\n// const newsArray = $input.first().json.articles; // This is an array\n\n// let headlines = newsArray.map(item => `${item.title} (${item.source.name})`).join(\"\\n\");\n\n// return [\n//   {\n//     json: {\n//       City: $input.first().json.city,\n//       Temp:$input.first().json.temperature_celsius ,\n//       Humidity: $input.first().json.humidity,\n//       LatestNews: headlines\n//     }\n//   }\n// ];\n\nconst items = $input.all(); // Get all merged inputs\nconst newsArray = items[0].json.articles; // First merged input has articles\nconst weather = items[1].json; // Second merged input has weather\n\nlet headlines = newsArray.map(item => `${item.title} (${item.source.name})`).join(\"\\n\");\n\nreturn [\n  {\n    json: {\n      City: weather.city,\n      Temp: `${weather.temperature_celsius}°C / ${weather.temperature_fahrenheit}°F`,\n      Humidity: `${weather.humidity}%`,\n      LatestNews: headlines\n    }\n  }\n];\n\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -287,7 +288,7 @@
     },
     {
       "parameters": {
-        "url": "=https://api.openweathermap.org/data/2.5/weather?q=London&appid=d23cadecd95b496f82841a2b20ef6458&units=metric",
+        "url": "=https://newsapi.org/v2/everything?q=mysore&from=2025-07-13&sortBy=publishedAt&apiKey=d23cadecd95b496f82841a2b20ef6458",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -297,7 +298,10 @@
         -160
       ],
       "id": "d0406d8e-7ac2-41a7-b38d-1d292c999265",
-      "name": "News Data"
+      "name": "News Data",
+      "retryOnFail": true,
+      "waitBetweenTries": 5,
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -347,6 +351,6 @@
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2025-08-13T03:27:13.000Z",
-  "versionId": "164e49d3-05f2-4838-b262-d230b8b3d07c"
+  "updatedAt": "2025-08-13T15:50:44.000Z",
+  "versionId": "60f02649-ae0b-4a26-8f4c-8f4d9a049be3"
 }
