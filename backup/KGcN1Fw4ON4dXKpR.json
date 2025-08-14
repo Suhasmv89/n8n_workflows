@@ -1,0 +1,79 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-13T08:31:38.063Z",
+  "id": "KGcN1Fw4ON4dXKpR",
+  "isArchived": false,
+  "meta": null,
+  "name": "webhook_cityReport",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "city-report-trigger",
+        "options": {
+          "responseData": "{ \"status\": \"Webhook received\" }"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "37b090cc-1834-41f9-893b-da60451e9e51",
+      "name": "Webhook",
+      "webhookId": "95fb6368-1e12-4f5a-ba0d-f426943dacf7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ebac7777-067c-4263-81bd-cd6203d98157",
+              "name": "city",
+              "value": "={{$json[\"body\"][\"city\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "79aee8ce-14af-4bf6-bbaf-b2d950242c3e",
+              "name": "requested_by",
+              "value": "={{$json[\"body\"][\"user\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "55dc0c4c-15de-4497-b417-e3f7f7612f4d",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-13T09:00:00.000Z",
+  "versionId": "b25c1f46-a4f3-4c96-8204-50fb44ba678c"
+}
