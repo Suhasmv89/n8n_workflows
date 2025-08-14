@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Code": {
       "main": [
@@ -23,7 +23,18 @@
         ]
       ]
     },
-    "Schedule Trigger": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
       "main": [
         [
           {
@@ -41,7 +52,7 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "name": "database-integration",
+  "name": "Webhook-database-integration",
   "nodes": [
     {
       "parameters": {
@@ -50,7 +61,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
+        880,
         -80
       ],
       "id": "65931f3b-61d5-40a4-92c8-4a503ed8e276",
@@ -58,37 +69,17 @@
     },
     {
       "parameters": {
-        "url": "https://api.openweathermap.org/data/2.5/weather?q=Mysore&appid=db8b65f584c022e56204bafc866e489b&units=metric",
+        "url": "=https://api.openweathermap.org/data/2.5/weather?q={{ $json.city }}&appid=db8b65f584c022e56204bafc866e489b&units=metric",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        220,
+        660,
         -80
       ],
       "id": "7d5948e0-6401-4d95-af02-7edb798f9887",
       "name": "Weather Data"
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "minutes",
-              "minutesInterval": 1
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        0,
-        -80
-      ],
-      "id": "21c7b77c-4844-4cc6-aa53-5aa10567ce7c",
-      "name": "Schedule Trigger"
     },
     {
       "parameters": {
@@ -171,7 +162,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        660,
+        1100,
         -80
       ],
       "id": "fabc429f-4022-4767-83f1-ff3da3ad18a3",
@@ -182,6 +173,53 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "city-report-trigger",
+        "options": {
+          "responseData": "{ \"status\": \"Webhook received\" }"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        -80
+      ],
+      "id": "e5fca6bf-6d3f-45c7-b6ce-3ecd25022546",
+      "name": "Webhook",
+      "webhookId": "95fb6368-1e12-4f5a-ba0d-f426943dacf7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ebac7777-067c-4263-81bd-cd6203d98157",
+              "name": "city",
+              "value": "={{$json[\"body\"][\"city\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "79aee8ce-14af-4bf6-bbaf-b2d950242c3e",
+              "name": "requested_by",
+              "value": "={{$json[\"body\"][\"user\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        -80
+      ],
+      "id": "641bcec9-80e2-4d5d-92ac-6fcbba306eff",
+      "name": "Edit Fields"
     }
   ],
   "pinData": {},
@@ -197,6 +235,6 @@
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2025-08-13T08:27:35.000Z",
-  "versionId": "eba64dbd-8655-400c-8bb0-4c5cc3b4f3e1"
+  "updatedAt": "2025-08-13T09:32:44.000Z",
+  "versionId": "7c4fc365-2eb5-4e85-86a5-8791f779a1b3"
 }
