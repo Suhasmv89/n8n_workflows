@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Schedule Trigger": {
       "main": [
@@ -28,6 +28,17 @@
         [
           {
             "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Slack",
             "type": "main",
             "index": 0
           }
@@ -171,15 +182,48 @@
       ],
       "id": "2f406a16-0001-4468-9a8f-447425dccbbc",
       "name": "Code"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09A5HCE31R",
+          "mode": "id"
+        },
+        "text": "={{ $json.symbol }} Price is - {{ $json.price_usd }} ",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        0
+      ],
+      "id": "a938ef23-6687-4633-a272-62cb4e886a1a",
+      "name": "Slack",
+      "webhookId": "ea1eb585-9c9d-4203-bd35-152305059eb4",
+      "executeOnce": false,
+      "notesInFlow": true,
+      "credentials": {
+        "slackApi": {
+          "id": "qZm8njhgcr1F27G4",
+          "name": "Slack account"
+        }
+      }
     }
   ],
   "pinData": {},
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2025-08-14T05:30:21.000Z",
-  "versionId": "5ce304e6-fd93-4661-b1ec-0d9e3daf48ab"
+  "triggerCount": 1,
+  "updatedAt": "2025-08-14T09:40:37.000Z",
+  "versionId": "feca968d-af05-48a0-8329-f5ce89b9b6cb"
 }
