@@ -74,7 +74,7 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "name": "My workflow 10",
+  "name": "Gmail_Summariser",
   "nodes": [
     {
       "parameters": {
@@ -314,6 +314,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-14T14:25:56.000Z",
-  "versionId": "cd70d5ba-7201-48db-bd8a-c171c847a98a"
+  "updatedAt": "2025-08-16T00:33:16.000Z",
+  "versionId": "e7c268f0-e07c-4be1-a423-5d5248d4267f"
 }
