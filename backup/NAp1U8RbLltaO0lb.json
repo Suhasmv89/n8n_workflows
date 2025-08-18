@@ -57,6 +57,17 @@
       "main": [
         [
           {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
             "node": "Loop Over Items",
             "type": "main",
             "index": 0
@@ -87,7 +98,7 @@
       "typeVersion": 1.2,
       "position": [
         0,
-        50
+        60
       ],
       "id": "99ce78b7-d59e-4aa4-9652-6b410594f1a7",
       "name": "Schedule Trigger"
@@ -154,6 +165,15 @@
                 "type": "dateTime",
                 "operation": "before"
               }
+            },
+            {
+              "id": "bfa51d2c-28c1-4a56-9801-2813e301ec12",
+              "leftValue": "={{ $json.Mail_Status }}",
+              "rightValue": "SENT",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
             }
           ],
           "combinator": "and"
@@ -172,7 +192,7 @@
     {
       "parameters": {
         "sendTo": "={{ $json.Customer_Email }}",
-        "subject": "\"🐾Paw-sitive reminder 🐾Doggy Ji🐾\"",
+        "subject": "🐾Paw-sitive reminder 🐾Doggy Ji🐾",
         "message": "=Hi {{ $json.Customer_Name }},<br><br>\n\nWe couldn’t help but notice that your Doggy Ji supplies might be running low. 🐶💖\nAnd we both know—an empty bowl means sad puppy eyes (and none of us want that!).<br><br>\n\nKeep your furry friend’s tail wagging with their favorite treats and meals.<br><br>\nIt just takes a click to restock and keep the happiness flowing:<br><br>\n\nOrder Doggy Ji Now<br><br>\n👉 https://www.doggyji.com/all-products/<br><br>\n\nBecause every meal is more than food—it’s love, care, and a wag of joy. 🐾<br><br>\n\nWith love ,<br><br>\nThe Doggy Ji Team 🐕✨<br><br>",
         "options": {
           "appendAttribution": false
@@ -193,6 +213,123 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Mail_Status": "={{ $json.labelIds[0] }}",
+            "Billing_Phone": "={{ $('If1').item.json.Billing_Phone }}"
+          },
+          "matchingColumns": [
+            "Billing_Phone"
+          ],
+          "schema": [
+            {
+              "id": "Billing_Phone",
+              "displayName": "Billing_Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Email",
+              "displayName": "Customer_Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Customer_Name",
+              "displayName": "Customer_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Orders",
+              "displayName": "Orders",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Predicted_Next_Order",
+              "displayName": "Predicted_Next_Order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Mail_Status",
+              "displayName": "Mail_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1100,
+        80
+      ],
+      "id": "7236269e-1a7e-4c2f-893c-e4e0ff6a0749",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -202,6 +339,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-18T00:40:46.000Z",
-  "versionId": "696156da-9003-4780-bbda-a4bfcc661b88"
+  "updatedAt": "2025-08-18T07:02:44.000Z",
+  "versionId": "4a05eb97-fe05-47a5-a2ac-2b13ef21c535"
 }
