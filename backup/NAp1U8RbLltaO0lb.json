@@ -1,0 +1,207 @@
+{
+  "active": false,
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-17T23:46:23.130Z",
+  "id": "NAp1U8RbLltaO0lb",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Doggyji_Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 11
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        50
+      ],
+      "id": "99ce78b7-d59e-4aa4-9652-6b410594f1a7",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        60
+      ],
+      "id": "1a69f6f8-dad8-4809-8b42-959087f114d3",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        440,
+        60
+      ],
+      "id": "cac23e34-88ca-4682-be28-725ab3e9e756",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "efba276d-2c15-4fba-b916-75aef471c23c",
+              "leftValue": "={{ $json.Predicted_Next_Order }}",
+              "rightValue": "={{ DateTime.now().plus({ days: 4 }).toISODate() }}\n",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "6c27a477-dc49-451f-a8b1-a131f624070b",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Customer_Email }}",
+        "subject": "\"🐾Paw-sitive reminder 🐾Doggy Ji🐾\"",
+        "message": "=Hi {{ $json.Customer_Name }},<br><br>\n\nWe couldn’t help but notice that your Doggy Ji supplies might be running low. 🐶💖\nAnd we both know—an empty bowl means sad puppy eyes (and none of us want that!).<br><br>\n\nKeep your furry friend’s tail wagging with their favorite treats and meals.<br><br>\nIt just takes a click to restock and keep the happiness flowing:<br><br>\n\nOrder Doggy Ji Now<br><br>\n👉 https://www.doggyji.com/all-products/<br><br>\n\nBecause every meal is more than food—it’s love, care, and a wag of joy. 🐾<br><br>\n\nWith love ,<br><br>\nThe Doggy Ji Team 🐕✨<br><br>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        75
+      ],
+      "id": "ecc5e1ad-67a1-4f5f-9e2d-725e0abf73e1",
+      "name": "Gmail",
+      "webhookId": "0d996f48-93e3-4269-9ccb-8ec45fb4302b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k80pQqowWBdiY8PB",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-18T00:40:46.000Z",
+  "versionId": "696156da-9003-4780-bbda-a4bfcc661b88"
+}
