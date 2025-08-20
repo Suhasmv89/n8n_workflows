@@ -334,11 +334,13 @@
   ],
   "pinData": {},
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "jMhfL4qr6mn61Pxu"
   },
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-18T07:02:44.000Z",
-  "versionId": "4a05eb97-fe05-47a5-a2ac-2b13ef21c535"
+  "updatedAt": "2025-08-19T00:31:27.000Z",
+  "versionId": "09a00da2-f447-488b-b3c2-f46379c49df6"
 }
