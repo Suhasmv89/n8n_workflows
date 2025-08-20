@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Ollama Chat Model": {
       "ai_languageModel": [
@@ -433,6 +433,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2025-07-25T03:21:05.000Z",
+  "updatedAt": "2025-08-19T00:27:08.000Z",
   "versionId": "e01a470b-c59f-4b76-9ee8-18db3d1a2d15"
 }
