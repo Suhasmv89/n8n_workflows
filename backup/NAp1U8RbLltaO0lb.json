@@ -5,18 +5,7 @@
       "main": [
         [
           {
-            "node": "Google Sheets",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Sheets": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
+            "node": "read_order_predicted_dates",
             "type": "main",
             "index": 0
           }
@@ -28,18 +17,29 @@
         [],
         [
           {
-            "node": "If1",
+            "node": "check_for_mail_status",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If1": {
+    "read_order_predicted_dates": {
       "main": [
         [
           {
-            "node": "Gmail",
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_for_mail_status": {
+      "main": [
+        [
+          {
+            "node": "send_gmail_notification",
             "type": "main",
             "index": 0
           }
@@ -53,18 +53,29 @@
         ]
       ]
     },
-    "Gmail": {
+    "send_gmail_notification": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "send_whatsapp_notification",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Google Sheets1": {
+    "send_whatsapp_notification": {
+      "main": [
+        [
+          {
+            "node": "updated_mail_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "updated_mail_status": {
       "main": [
         [
           {
@@ -74,33 +85,11 @@
           }
         ]
       ]
-    },
-    "WhatsApp Business Cloud": {
-      "main": [
-        [
-          {
-            "node": "Google Sheets1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "WhatsApp Business Cloud",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "createdAt": "2025-08-17T23:46:23.130Z",
   "id": "NAp1U8RbLltaO0lb",
-  "isArchived": false,
+  "isArchived": true,
   "meta": {
     "templateCredsSetupCompleted": true
   },
@@ -120,10 +109,23 @@
       "typeVersion": 1.2,
       "position": [
         0,
-        60
+        50
       ],
       "id": "99ce78b7-d59e-4aa4-9652-6b410594f1a7",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        440,
+        50
+      ],
+      "id": "cac23e34-88ca-4682-be28-725ab3e9e756",
+      "name": "Loop Over Items"
     },
     {
       "parameters": {
@@ -145,29 +147,16 @@
       "typeVersion": 4.6,
       "position": [
         220,
-        60
+        50
       ],
       "id": "1a69f6f8-dad8-4809-8b42-959087f114d3",
-      "name": "Google Sheets",
+      "name": "read_order_predicted_dates",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "oiWhzThVRrIrZewd",
           "name": "Google Sheets account"
         }
       }
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        440,
-        60
-      ],
-      "id": "cac23e34-88ca-4682-be28-725ab3e9e756",
-      "name": "Loop Over Items"
     },
     {
       "parameters": {
@@ -209,7 +198,7 @@
         0
       ],
       "id": "6c27a477-dc49-451f-a8b1-a131f624070b",
-      "name": "If1"
+      "name": "check_for_mail_status"
     },
     {
       "parameters": {
@@ -224,10 +213,10 @@
       "typeVersion": 2.1,
       "position": [
         880,
-        75
+        0
       ],
       "id": "ecc5e1ad-67a1-4f5f-9e2d-725e0abf73e1",
-      "name": "Gmail",
+      "name": "send_gmail_notification",
       "webhookId": "0d996f48-93e3-4269-9ccb-8ec45fb4302b",
       "credentials": {
         "gmailOAuth2": {
@@ -235,6 +224,39 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/735208326349704/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAUf9VaVyiYBPJeh877mXxG14rV0hmDqKMOZAjdGPVhQ6zDPlrfVr3vrGoT5aw00DOtD3BNXDhriBNEAYxCO6Obh6JYi17baflpBHMIWTStZBoCkQecI83b71WrL4cOsZBjIllVnP0ENZArAo9AY4kCWaM9PWbpIYfENEe7XJaZB9nWhci3ohDFmViCDeGg7j"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"messaging_product\": \"whatsapp\",\n    \"to\": \"{{ '91' + $('check_for_mail_status').item.json.Billing_Phone }}\",\n    \"type\": \"template\",\n    \"template\": {\n        \"name\": \"doggyji \",\n        \"language\": {\n            \"code\": \"en\"\n        },\n        \"components\": [\n            {\n                \"type\": \"button\",\n                \"sub_type\": \"CATALOG\",\n                \"index\": 0,\n                \"parameters\": [\n                    {\n                        \"type\": \"action\",\n                        \"action\": {\n                            \"thumbnail_product_retailer_id\": \"lql6g38vpp\"\n                        }\n                    }\n                ]\n            }\n        ]\n    }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ],
+      "id": "81c6ae65-990e-45a4-9f34-f05cfa658e2e",
+      "name": "send_whatsapp_notification"
     },
     {
       "parameters": {
@@ -254,8 +276,8 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Mail_Status": "={{ $('Gmail').item.json.labelIds.includes('SENT') ? 'SENT' : '' }}",
-            "Billing_Phone": "={{ $('If1').item.json.Billing_Phone }}"
+            "Mail_Status": "={{ $('send_gmail_notification').item.json.labelIds.includes('SENT') ? 'SENT' : '' }}",
+            "Billing_Phone": "={{ $('check_for_mail_status').item.json.Billing_Phone }}"
           },
           "matchingColumns": [
             "Billing_Phone"
@@ -341,77 +363,17 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        1540,
-        80
+        1320,
+        75
       ],
       "id": "7236269e-1a7e-4c2f-893c-e4e0ff6a0749",
-      "name": "Google Sheets1",
+      "name": "updated_mail_status",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "oiWhzThVRrIrZewd",
           "name": "Google Sheets account"
         }
       }
-    },
-    {
-      "parameters": {
-        "operation": "send",
-        "phoneNumberId": "=735208326349704",
-        "recipientPhoneNumber": "+918904516491",
-        "textBody": "=Hi {{ $('If1').item.json.Customer_Name }},\n\nWe couldn’t help but notice that your Doggy Ji supplies might be running low. 🐶💖 And we both know—an empty bowl means sad puppy eyes (and none of us want that!). \n\nKeep your furry friend’s tail wagging with their favorite treats and meals.\n\nIt just takes a click to restock and keep the happiness flowing:\n\nOrder Doggy Ji \n👉  https://www.doggyji.com/all-products/\n\nBecause every meal is more than food—it’s love, care, and a wag of joy. 🐾\n\nWith love ,\nThe Doggy Ji Team 🐕✨",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.whatsApp",
-      "typeVersion": 1,
-      "position": [
-        1320,
-        80
-      ],
-      "id": "43f945c1-f6d6-4587-b350-1350a970ee5a",
-      "name": "WhatsApp Business Cloud",
-      "webhookId": "1f587474-1df7-4259-b987-f3dd85e5aaa8",
-      "alwaysOutputData": true,
-      "credentials": {
-        "whatsAppApi": {
-          "id": "pq2b8rmBqgDiRtgS",
-          "name": "WhatsApp account"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/735208326349704/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAVd7o4Jbt4BPHJ6q3I7KQcBYL5NuJZCgHWPccaM79dCUiQwjrpuPcglorWBMFM7e0q1PZBkclAP5ZC5QSlA2c7SlLCdMqnSG7tQTdiHk9wJK3dhCCT0RFPQZA60t38FaEitG9k6qdeFh3x3lFeGTiHm3agbkrtjYsbPHZAsN7ZCPmqwymFVxHE0Yewfs3ZA2WUk6gp5sYa4HuBrcFcJpdVtsXfcqpRYgdZBSGLZBEXFZAaVjWYgZDZD"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"918904516491\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"doggyji_rem\",\n    \"language\": {\n      \"code\": \"en\"\n    }\n  }\n}\n",
-        "options": {
-          "response": {
-            "response": {
-              "fullResponse": true
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1100,
-        80
-      ],
-      "id": "81c6ae65-990e-45a4-9f34-f05cfa658e2e",
-      "name": "HTTP Request",
-      "disabled": true
     }
   ],
   "pinData": {},
@@ -423,6 +385,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-21T00:43:49.000Z",
-  "versionId": "82e781aa-82e7-491c-94da-41c6364db9a8"
+  "updatedAt": "2025-08-21T10:38:47.000Z",
+  "versionId": "04eb121a-9008-4fd4-8469-fe9159ec6713"
 }
