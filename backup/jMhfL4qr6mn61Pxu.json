@@ -27,6 +27,17 @@
       "main": [
         [
           {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
             "node": "Google Sheets",
             "type": "main",
             "index": 0
@@ -41,7 +52,7 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "name": "error-handling-logging",
+  "name": "error-handling-logging_gmail",
   "nodes": [
     {
       "parameters": {},
@@ -87,6 +98,12 @@
               "name": "Timestamp",
               "value": "={{new Date().toISOString()}}",
               "type": "string"
+            },
+            {
+              "id": "ee5eecc6-8e85-441c-b8b2-b20f79519fd3",
+              "name": "Failed node:",
+              "value": "= {{$json.execution.lastNodeExecuted}}",
+              "type": "string"
             }
           ]
         },
@@ -109,8 +126,10 @@
           "value": "C09ARJGA8EL",
           "mode": "id"
         },
-        "text": "=🚨 n8n Workflow Failed! Workflow: {{$json[\"Workflow name\"]}} Node: {{$json[\"Failed node\"]}} Error: {{$json[\"Error message\"]}} Time: {{$json[\"Timestamp\"]}}",
-        "otherOptions": {}
+        "text": "=🚨 n8n Workflow Failed! \n\nWorkflow:{{ $json[\"Workflow name:\"] }} \n\nNode:{{ $json[\"Failed node:\"] }} \n\nError:{{ $json[\"Error message:\"] }}\n\nTime: {{$json[\"Timestamp\"]}}",
+        "otherOptions": {
+          "mrkdwn": true
+        }
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.3,
@@ -198,7 +217,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        660,
+        880,
         0
       ],
       "id": "17e5d8ce-ef52-44e9-bf55-3a27336324e8",
@@ -209,6 +228,31 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "sendTo": "suhas.mv89@gmail.com",
+        "subject": "={{ $('Edit Fields').item.json[\"Workflow name:\"] }} failed",
+        "message": "=1. Failed Node :{{ $('Edit Fields').item.json[\"Failed node:\"] }} <br><br>\n2. Error Message : {{ $('Edit Fields').item.json[\"Error message:\"] }} <br><br>\n3. Failed at : {{ $('Edit Fields').item.json.Timestamp }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        0
+      ],
+      "id": "2980e314-802a-42ec-8e33-89c68257ca16",
+      "name": "Gmail",
+      "webhookId": "36d71dad-95ab-4ab2-b467-17e31bc65b7f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k80pQqowWBdiY8PB",
+          "name": "Gmail account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -216,8 +260,15 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "tags": [],
+  "tags": [
+    {
+      "createdAt": "2025-08-19T00:29:24.861Z",
+      "updatedAt": "2025-08-19T00:29:24.861Z",
+      "id": "2tW3yk6r2sLsMeuT",
+      "name": "V1"
+    }
+  ],
   "triggerCount": 0,
-  "updatedAt": "2025-08-13T03:18:36.000Z",
-  "versionId": "9803ef5d-9705-490b-ad4a-75d7cac1f0a6"
+  "updatedAt": "2025-08-19T00:30:38.000Z",
+  "versionId": "7ca23ea6-86ce-4b5a-a091-85d4e8664153"
 }
