@@ -1,98 +1,167 @@
-/* ---------- Global Reset ---------- */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ---------- Base Styles ---------- */
+/* General Styling */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Arial, sans-serif;
   line-height: 1.6;
-  background-color: #f9fafc;
+  background: #f9f9f9;
   color: #333;
 }
 
-/* ---------- Header ---------- */
 header {
-  background: #1f2937; /* dark slate */
-  color: #fff;
-  padding: 1rem 2rem;
+  background: #4a90e2;
+  color: white;
   text-align: center;
+  padding: 2rem 1rem;
 }
 
 header h1 {
-  font-size: 1.8rem;
   margin-bottom: 0.5rem;
 }
 
-header nav a {
-  color: #fff;
-  margin: 0 0.8rem;
+nav a {
+  color: white;
+  margin: 0 10px;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  font-weight: bold;
 }
 
-header nav a:hover {
-  color: #60a5fa; /* blue on hover */
+nav a:hover {
+  text-decoration: underline;
 }
 
-/* ---------- Sections ---------- */
+.content {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem 1rem;
+}
+
 section {
-  padding: 2rem 10%;
+  margin-bottom: 3rem;
 }
 
-section h2 {
-  font-size: 1.6rem;
-  margin-bottom: 1rem;
-  color: #1f2937;
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #4a90e2;
 }
 
-section p {
-  margin-bottom: 1rem;
+h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
 }
 
-/* ---------- Features List ---------- */
-ul {
-  list-style: disc inside;
-  margin-left: 1rem;
+.intro p {
+  font-size: 1.1rem;
+  text-align: center;
+  max-width: 600px;
+  margin: auto;
+  line-height: 1.8;
 }
 
-ul li {
-  margin: 0.5rem 0;
+/* Workflow Diagram */
+.workflow-diagram {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
 }
 
-/* ---------- Workflow Demo ---------- */
-.workflow-demo {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+.step {
+  background: white;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+  border-left: 4px solid #4a90e2;
 }
 
-/* ---------- Buttons ---------- */
-a.button {
+.step h3 {
+  color: #4a90e2;
+  margin-bottom: 0.5rem;
+}
+
+.step p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Features and Use Cases */
+.features ul, .use-cases ul {
+  list-style: none;
+  max-width: 600px;
+  margin: auto;
+}
+
+.features li, .use-cases li {
+  background: white;
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-left: 3px solid #4a90e2;
+}
+
+/* Links Section */
+.links {
+  text-align: center;
+}
+
+.btn {
   display: inline-block;
-  background: #2563eb;
-  color: #fff;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
+  padding: 0.8rem 1.5rem;
+  background: #4a90e2;
+  color: white;
+  border-radius: 5px;
   text-decoration: none;
-  font-weight: 600;
+  margin: 0.5rem;
   transition: background 0.3s ease;
 }
 
-a.button:hover {
-  background: #1e40af;
+.btn:hover {
+  background: #357abd;
 }
 
-/* ---------- Footer ---------- */
+/* Screenshot */
+.screenshot {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin: 1rem 0;
+}
+
+/* Footer */
 footer {
-  background: #1f2937;
-  color: #d1d5db;
   text-align: center;
   padding: 1rem;
   margin-top: 2rem;
+  background: #333;
+  color: white;
+  font-size: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .workflow-diagram {
+    grid-template-columns: 1fr;
+  }
+  
+  .content {
+    padding: 1rem;
+  }
+  
+  header {
+    padding: 1rem;
+  }
+  
+  nav a {
+    display: block;
+    margin: 0.5rem 0;
+  }
 }
