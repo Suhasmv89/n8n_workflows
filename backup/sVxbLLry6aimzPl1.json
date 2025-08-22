@@ -1,0 +1,673 @@
+{
+  "active": false,
+  "connections": {
+    "Group_Users_Based_On_Phone_Number": {
+      "main": [
+        [
+          {
+            "node": "Find_Repeat_Customers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find_Repeat_Customers": {
+      "main": [
+        [
+          {
+            "node": "Pridict_Next_Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "check_for_mail_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read_order_predicted_dates": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_for_mail_status": {
+      "main": [
+        [
+          {
+            "node": "send_gmail_notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_gmail_notification": {
+      "main": [
+        [
+          {
+            "node": "send_whatsapp_notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_whatsapp_notification": {
+      "main": [
+        [
+          {
+            "node": "updated_mail_status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "updated_mail_status": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read_orders": {
+      "main": [
+        [
+          {
+            "node": "Group_Users_Based_On_Phone_Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_pridicted_orders": {
+      "main": [
+        []
+      ]
+    },
+    "Pridict_Next_Orders": {
+      "main": [
+        [
+          {
+            "node": "update_pridicted_orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "schedule_trigger_2am": {
+      "main": [
+        [
+          {
+            "node": "read_orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "schedule_trigger_11am": {
+      "main": [
+        [
+          {
+            "node": "read_order_predicted_dates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-21T08:01:35.561Z",
+  "id": "sVxbLLry6aimzPl1",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Doggji_Order_Prediction_Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const grouped = {};\n\n// Helper function to parse \"DD-MM-YYYY HH:mm:ss\" into JS Date\nfunction parseDate(dateStr) {\n  if (!dateStr) return null; // safeguard\n  const [day, month, rest] = dateStr.split(\"-\");\n  if (!rest) return null;\n  const [year, time] = rest.split(\" \");\n  return new Date(`${year}-${month}-${day}T${time}`);\n}\n\n// Helper to normalize phone number (remove +91 if present)\nfunction normalizePhone(phone) {\n  if (!phone) return null;\n  phone = String(phone).trim(); // force to string\n  return phone.replace(/^(\\+91)/, \"\").trim();\n}\n\n// Group orders by billing_phone\nfor (const row of items) {\n  const phone = normalizePhone(row.json.billing_phone);\n  if (!phone) continue; // skip if phone missing\n\n  if (!grouped[phone]) {\n    grouped[phone] = {\n      billing_phone: phone,\n      customer_email: row.json.customer_email,\n      name: row.json.billing_first_name + \" \" + row.json.billing_last_name,\n      orders: []\n    };\n  }\n\n  // add order\n  grouped[phone].orders.push(parseDate(row.json.order_date));\n}\n\n// Sort orders for each customer\nreturn Object.values(grouped).map(cust => {\n  cust.orders = cust.orders.filter(o => o !== null).sort((a, b) => a - b);\n  return { json: cust };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -300,
+        -20
+      ],
+      "id": "15a9a994-cb0c-4813-aedb-d153ff54edf8",
+      "name": "Group_Users_Based_On_Phone_Number"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: already grouped customers with orders array\nlet customers = $input.all().map(item => item.json);\n\n// Keep only customers with valid 10-digit billing_phone\ncustomers = customers.filter(c => {\n  // Check: not null/empty, only digits, length = 10\n  return c.billing_phone && /^\\d{10}$/.test(c.billing_phone);\n});\n\n// Separate into repeat vs one-time\nconst repeatCustomers = customers.filter(c => c.orders && c.orders.length > 1);\n//const oneTimeCustomers = customers.filter(c => c.orders && c.orders.length === 1);\n\n// Return both lists (or whichever you need)\nreturn [\n  { json: { data: repeatCustomers } }\n  //{ json: { data: oneTimeCustomers } }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -20
+      ],
+      "id": "3bca1fcd-03ef-4b07-aef4-74306b3328d9",
+      "name": "Find_Repeat_Customers"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -320,
+        300
+      ],
+      "id": "572e2030-e3a2-4009-9830-489fab9f016d",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -520,
+        390
+      ],
+      "id": "55aa75c1-4961-4386-8b9f-7c2de71fa0c0",
+      "name": "read_order_predicted_dates",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "efba276d-2c15-4fba-b916-75aef471c23c",
+              "leftValue": "={{ $json.Predicted_Next_Order }}",
+              "rightValue": "={{ DateTime.now().plus({ days: 4 }).toISODate() }}\n",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            },
+            {
+              "id": "bfa51d2c-28c1-4a56-9801-2813e301ec12",
+              "leftValue": "={{ $json.Mail_Status }}",
+              "rightValue": "SENT",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        240
+      ],
+      "id": "73260701-8b0b-4a00-af4e-ce0bc32b64e4",
+      "name": "check_for_mail_status"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Customer_Email }}",
+        "subject": "🐾Paw-sitive reminder 🐾Doggy Ji🐾",
+        "message": "=Hi {{ $json.Customer_Name }},<br><br>\n\nWe couldn’t help but notice that your Doggy Ji supplies might be running low. 🐶💖\nAnd we both know—an empty bowl means sad puppy eyes (and none of us want that!).<br><br>\n\nKeep your furry friend’s tail wagging with their favorite treats and meals.<br><br>\nIt just takes a click to restock and keep the happiness flowing:<br><br>\n\nOrder Doggy Ji Now<br><br>\n👉 https://www.doggyji.com/all-products/<br><br>\n\nBecause every meal is more than food—it’s love, care, and a wag of joy. 🐾<br><br>\n\nWith love ,<br><br>\nThe Doggy Ji Team 🐕✨<br><br>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        140,
+        240
+      ],
+      "id": "c0a8503d-d861-448e-8627-502197d681d1",
+      "name": "send_gmail_notification",
+      "webhookId": "0d996f48-93e3-4269-9ccb-8ec45fb4302b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k80pQqowWBdiY8PB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/735208326349704/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAUf9VaVyiYBPJeh877mXxG14rV0hmDqKMOZAjdGPVhQ6zDPlrfVr3vrGoT5aw00DOtD3BNXDhriBNEAYxCO6Obh6JYi17baflpBHMIWTStZBoCkQecI83b71WrL4cOsZBjIllVnP0ENZArAo9AY4kCWaM9PWbpIYfENEe7XJaZB9nWhci3ohDFmViCDeGg7j"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"messaging_product\": \"whatsapp\",\n    \"to\": \"{{ '91' + $('check_for_mail_status').item.json.Billing_Phone }}\",\n    \"type\": \"template\",\n    \"template\": {\n        \"name\": \"doggyji \",\n        \"language\": {\n            \"code\": \"en\"\n        },\n        \"components\": [\n            {\n                \"type\": \"button\",\n                \"sub_type\": \"CATALOG\",\n                \"index\": 0,\n                \"parameters\": [\n                    {\n                        \"type\": \"action\",\n                        \"action\": {\n                            \"thumbnail_product_retailer_id\": \"lql6g38vpp\"\n                        }\n                    }\n                ]\n            }\n        ]\n    }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        360,
+        240
+      ],
+      "id": "6eb096c1-0a74-484c-ae87-9be421ca6f45",
+      "name": "send_whatsapp_notification"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Mail_Status": "={{ $('send_gmail_notification').item.json.labelIds.includes('SENT') ? 'SENT' : '' }}",
+            "Billing_Phone": "={{ $('check_for_mail_status').item.json.Billing_Phone }}"
+          },
+          "matchingColumns": [
+            "Billing_Phone"
+          ],
+          "schema": [
+            {
+              "id": "Billing_Phone",
+              "displayName": "Billing_Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Email",
+              "displayName": "Customer_Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Customer_Name",
+              "displayName": "Customer_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Orders",
+              "displayName": "Orders",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Predicted_Next_Order",
+              "displayName": "Predicted_Next_Order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Mail_Status",
+              "displayName": "Mail_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        580,
+        315
+      ],
+      "id": "3932a59e-ac21-407c-8242-8f37c5d91b5d",
+      "name": "updated_mail_status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1tDFQLjD6zf_NYn1kgxiOU2RVRKXPwelruWPtYWnXRRo/edit?gid=270499132#gid=270499132",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 270499132,
+          "mode": "list",
+          "cachedResultName": "order_export_2025-08-11-01-09-18_edited1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tDFQLjD6zf_NYn1kgxiOU2RVRKXPwelruWPtYWnXRRo/edit#gid=270499132"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -520,
+        -20
+      ],
+      "id": "032ac72d-edf9-421e-ad59-9fc77c555596",
+      "name": "read_orders",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1cUwKi2V94l6r3nmU0rEtohBOSISmn1gN1nxGWzq_uw4/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cUwKi2V94l6r3nmU0rEtohBOSISmn1gN1nxGWzq_uw4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Billing_Phone": "={{ $json.billing_phone }}",
+            "Customer_Email": "={{ $json.customer_email }}",
+            "Customer_Name": "={{ $json.name }}",
+            "Orders": "={{ $json.orders }}",
+            "Predicted_Next_Order": "={{ $json.predicted_next_order }}"
+          },
+          "matchingColumns": [
+            "Billing_Phone"
+          ],
+          "schema": [
+            {
+              "id": "Billing_Phone",
+              "displayName": "Billing_Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Email",
+              "displayName": "Customer_Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Name",
+              "displayName": "Customer_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Orders",
+              "displayName": "Orders",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Predicted_Next_Order",
+              "displayName": "Predicted_Next_Order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        360,
+        -20
+      ],
+      "id": "ef5fdc5a-bf64-44e4-9bb2-a96e5bf30ed7",
+      "name": "update_pridicted_orders",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Predict next order based on average gap\nfunction predictNextOrder(orders = []) {\n  if (!Array.isArray(orders)) return null;\n\n  // Remove nulls and invalid dates\n  const validOrders = orders\n    .map(d => d ? new Date(d) : null)\n    .filter(d => d instanceof Date && !isNaN(d));\n\n  // Need at least 2 orders to calculate a gap\n  if (validOrders.length < 2) {\n    return null;\n  }\n\n  // Sort orders ascending\n  validOrders.sort((a, b) => a - b);\n\n  // Calculate gaps in days\n  const gaps = [];\n  for (let i = 1; i < validOrders.length; i++) {\n    const diffDays = (validOrders[i] - validOrders[i - 1]) / (1000 * 60 * 60 * 24);\n    gaps.push(diffDays);\n  }\n\n  // Average gap\n  const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;\n\n  // Next order = last order + avg gap\n  const lastOrder = validOrders[validOrders.length - 1];\n  const nextOrder = new Date(lastOrder);\n  nextOrder.setDate(lastOrder.getDate() + Math.round(avgGap));\n\n  return nextOrder;\n}\n\n// Loop through all customers in data[]\nreturn items[0].json.data.map(cust => {\n  const predictedDate = predictNextOrder(cust.orders);\n\n  return {\n    json: {\n      billing_phone: cust.billing_phone,\n      customer_email: cust.customer_email,\n      name: cust.name,\n      orders: cust.orders,\n      predicted_next_order: predictedDate ? predictedDate.toISOString() : \"Not enough data\"\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        140,
+        -20
+      ],
+      "id": "dfc53e9f-a05f-419f-81b0-8d09ff4e5e2d",
+      "name": "Pridict_Next_Orders"
+    },
+    {
+      "parameters": {
+        "content": "## Order prediction flow\nThis flow reads order details from Google Sheet and based on previous order details , predicts next order dates and creates a new google sheet with repeated customers and predicted order dates.",
+        "height": 300,
+        "width": 1520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        -120
+      ],
+      "id": "0f42fcf2-0e29-4ca1-a9e3-35897ff0681a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Order Notification flow\nThis flow reads data from Google Sheets and sends a notification via Gmail and whatsapp ",
+        "height": 400,
+        "width": 1660,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        220
+      ],
+      "id": "aa974cb0-c3f0-40f1-843c-ef7be417d7cb",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -740,
+        -20
+      ],
+      "id": "d37eb865-5eee-4be5-84f1-f3c50db8739f",
+      "name": "schedule_trigger_2am"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 11
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -740,
+        390
+      ],
+      "id": "42ffee0e-bce5-4d8f-91bc-e90004a938de",
+      "name": "schedule_trigger_11am"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "jMhfL4qr6mn61Pxu"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-21T08:54:38.000Z",
+  "versionId": "f7778812-7e06-4e16-9ccc-f5e42766ccb9"
+}
