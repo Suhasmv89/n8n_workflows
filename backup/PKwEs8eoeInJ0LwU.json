@@ -1,0 +1,364 @@
+{
+  "active": false,
+  "connections": {
+    "Shopify Webhook": {
+      "main": [
+        [
+          {
+            "node": "read_inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read_inventory": {
+      "main": [
+        [
+          {
+            "node": "check_sku_quantity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_sku_quantity": {
+      "main": [
+        [
+          {
+            "node": "check_error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_error": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send SMS via Twilio",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send SMS via Twilio": {
+      "main": [
+        [
+          {
+            "node": "update_inventory1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack": {
+      "main": [
+        [
+          {
+            "node": "update_inventory1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_inventory1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-25T11:17:14.102Z",
+  "id": "PKwEs8eoeInJ0LwU",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "invoice_notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "shopify-order",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f721d716-10d3-449f-946a-921b06316211",
+      "name": "Shopify Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        20
+      ],
+      "webhookId": "a5606e99-074c-4b0d-be51-17015dc984e5"
+    },
+    {
+      "parameters": {
+        "from": "+12202393680",
+        "to": "={{ $('check_sku_quantity').item.json.phone }}",
+        "message": "=Thanks for your order #{{ $('check_sku_quantity').item.json.order_number }} !! We’re processing it now.",
+        "options": {}
+      },
+      "id": "5cc15a84-37a3-4ae7-ab4a-f067f7a55e59",
+      "name": "Send SMS via Twilio",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        520,
+        20
+      ],
+      "credentials": {
+        "twilioApi": {
+          "id": "9LTCpIdxTI9FkGgp",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09BY4JR6CE",
+          "mode": "id"
+        },
+        "text": "=order_number - {{ $('check_sku_quantity').item.json.order_number }}executed.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        520,
+        220
+      ],
+      "id": "a58ce60a-3047-4561-bf61-7379b53018a8",
+      "name": "Slack",
+      "webhookId": "cdf5f360-e8bf-489d-856d-b814c429e8bf",
+      "credentials": {
+        "slackApi": {
+          "id": "qZm8njhgcr1F27G4",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -140,
+        20
+      ],
+      "id": "5bb74126-3525-495f-8c18-bfeb0be6d522",
+      "name": "read_inventory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const incomingSKU =$('Shopify Webhook').first().json.body.body.line_items[0].sku ;\nconst incomingQty =$('Shopify Webhook').first().json.body.body.line_items[0].quantity;\nconst rows = $items(\"read_inventory\"); // replace with actual node name that reads rows\n\nlet updateRowNumber = null;\nlet newQuantity = null;\nlet found = false;\n\nfor (let i = 0; i < rows.length; i++) {\n  const sku = rows[i].json['SKU'];\n  const qty = parseInt(rows[i].json['Quantity'], 10);\n\n  if (sku === incomingSKU) {\n    found = true;\n    updateRowNumber = i + 1; // headers in row 1, data starts at row 2\n    newQuantity = qty - incomingQty;\n\n    if (newQuantity < 0) {\n      return [{ json: { error: `New quantity for SKU ${incomingSKU} cannot be less than 0! (Current: ${qty}, To subtract: ${incomingQty})` } }];\n    }\n    break;\n  }\n}\n\nif (!found) {\n  return [{ json: { error: `SKU ${incomingSKU} not found in inventory.` } }];\n}\n\nreturn [{ json: { rowNumber: updateRowNumber, updatedQuantity: newQuantity,sku: incomingSKU, phone:$('Shopify Webhook').first().json.body.body.customer.phone, order_number:$('Shopify Webhook').first().json.body.body.order_number} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        20
+      ],
+      "id": "a3b44771-31ad-485a-af91-26fac608db83",
+      "name": "check_sku_quantity"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "37d88c3f-1142-4090-bddc-4adef07eb8a0",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        300,
+        20
+      ],
+      "id": "1ed52dff-9e22-40e3-b41c-e4d2670dd84f",
+      "name": "check_error"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        520,
+        -180
+      ],
+      "id": "ca30f78f-2b0d-4063-9f81-e0515cd1776c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"processed succesfully\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        960,
+        120
+      ],
+      "id": "9ec34b84-d780-4869-b026-ce7ec6a46f7a",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "SKU": "={{ $('check_sku_quantity').item.json.sku }}",
+            "Quantity": "={{ $('check_sku_quantity').item.json.updatedQuantity }}"
+          },
+          "matchingColumns": [
+            "SKU"
+          ],
+          "schema": [
+            {
+              "id": "SKU",
+              "displayName": "SKU",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Quantity",
+              "displayName": "Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        740,
+        120
+      ],
+      "id": "7966c948-9794-46e2-ac9a-1b4a1ac6a8c8",
+      "name": "update_inventory1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-26T05:45:38.000Z",
+  "versionId": "169451b3-d725-4122-a8be-48fca46e4671"
+}
