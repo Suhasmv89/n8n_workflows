@@ -1,45 +1,12 @@
 {
   "active": false,
   "connections": {
-    "Schedule Trigger": {
-      "main": [
-        [
-          {
-            "node": "Google Sheets",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Sheets": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Loop Over Items": {
       "main": [
         [],
         [
           {
-            "node": "If",
+            "node": "check_notified",
             "type": "main",
             "index": 0
           }
@@ -50,14 +17,47 @@
       "main": [
         [
           {
-            "node": "Google Sheets1",
+            "node": "update_inventory",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If": {
+    "trigger_daily_9am": {
+      "main": [
+        [
+          {
+            "node": "read_inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read_inventory": {
+      "main": [
+        [
+          {
+            "node": "check_threshold",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_threshold": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_notified": {
       "main": [
         [
           {
@@ -75,7 +75,7 @@
         ]
       ]
     },
-    "Google Sheets1": {
+    "update_inventory": {
       "main": [
         [
           {
@@ -93,76 +93,13 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "name": "auto_reorder_notification",
+  "name": "lowstock_notification_and_reorder",
   "nodes": [
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "triggerAtHour": 9
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -960,
-        230
-      ],
-      "id": "d7ae0198-0062-48ab-ae14-164efa53be52",
-      "name": "Schedule Trigger"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit?gid=0#gid=0",
-          "mode": "url"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit#gid=0"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        -740,
-        230
-      ],
-      "id": "e448b787-c595-4ba7-8d3f-91a0cfde0f3a",
-      "name": "Google Sheets",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "oiWhzThVRrIrZewd",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  if (item.json.Quantity < 5) {\n    item.json.notify = 'YES';\n  }\n  //item.json.myNewField = 1;\n}\n\nreturn $input.all();"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -520,
-        230
-      ],
-      "id": "5fc9fcf9-55af-4809-a289-49af3d517bb2",
-      "name": "Code"
-    },
     {
       "parameters": {
         "sendTo": "suhas.mv89@gmail.com",
         "subject": "Auto-reorder ",
-        "message": "=Stock for Product {{ $('Google Sheets').item.json.SKU }} is below {{ $json.Quantity }} units ",
+        "message": "=Stock for Product {{ $('read_inventory').item.json.SKU }} is below {{ $json.Quantity }} units ",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
@@ -196,6 +133,69 @@
     },
     {
       "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -960,
+        230
+      ],
+      "id": "d7ae0198-0062-48ab-ae14-164efa53be52",
+      "name": "trigger_daily_9am"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zs9_ouhX2-efrxJLIvvMc6OarnoFbYMM-GdDB8KwzSk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -740,
+        230
+      ],
+      "id": "e448b787-c595-4ba7-8d3f-91a0cfde0f3a",
+      "name": "read_inventory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  if (item.json.Quantity < 5) {\n    item.json.notify = 'YES';\n  }\n  //item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -520,
+        230
+      ],
+      "id": "5fc9fcf9-55af-4809-a289-49af3d517bb2",
+      "name": "check_threshold"
+    },
+    {
+      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -216,7 +216,7 @@
             },
             {
               "id": "ff5247aa-d6b3-4e72-b61a-e37534e076e5",
-              "leftValue": "={{ $('Google Sheets').item.json.Supplier_Notification_Status }}",
+              "leftValue": "={{ $('read_inventory').item.json.Supplier_Notification_Status }}",
               "rightValue": "Notified",
               "operator": {
                 "type": "string",
@@ -235,7 +235,7 @@
         80
       ],
       "id": "8cb8d78b-2332-402d-880b-e6d53b82e2fb",
-      "name": "If"
+      "name": "check_notified"
     },
     {
       "parameters": {
@@ -256,7 +256,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "Supplier_Notification_Status": "Notified",
-            "SKU": "={{ $('If').item.json.SKU }}"
+            "SKU": "={{ $('check_notified').item.json.SKU }}"
           },
           "matchingColumns": [
             "SKU"
@@ -305,7 +305,7 @@
         155
       ],
       "id": "df11a016-4d3f-4dd5-aee2-0cb7b9d49b6e",
-      "name": "Google Sheets1",
+      "name": "update_inventory",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "oiWhzThVRrIrZewd",
@@ -321,6 +321,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-26T06:19:03.000Z",
-  "versionId": "e99259dd-6869-4180-87b6-581b4df5c315"
+  "updatedAt": "2025-08-26T08:02:32.000Z",
+  "versionId": "f325be9f-1947-4bce-b0df-588c84f1fecf"
 }
