@@ -1,0 +1,346 @@
+{
+  "active": false,
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "read_customers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read_customers": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-26T09:59:37.139Z",
+  "id": "kCyfwzObZUHWGqMM",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "pet_bday_wishes",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5cdb86c6-ec14-48f0-a2d9-ec82da0a44f0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "f7398fb2-f072-4308-a584-4a1a76212c2b",
+      "name": "read_customers",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\nconst todayMonth = today.getMonth() + 1; // JS months are 0-based\nconst todayDate = today.getDate();\n\nconst results = [];\n\nfor (const item of $input.all()) {\n  // Note: use the exact field names from your input JSON\n  const dob = new Date(item.json[\"Pet_DOB\"]); \n  const dobMonth = dob.getMonth() + 1;\n  const dobDate = dob.getDate();\n\n  if (dobMonth === todayMonth && dobDate === todayDate && item.json[\"Last_Birthday_Sent\"] != 'YES') {\n    // It's the pet's birthday today 🎉\n    results.push({\n      json: {\n        customerName: item.json[\"Customer_Name\"],\n        petName: item.json[\"Pet_Name\"],\n        email: item.json[\"Customer_Email\"],\n        \"Billing_Phone\":item.json[\"Billing_Phone\"],\n        message: `Please tell ${item.json[\"Pet_Name\"]}!: Happy Birthday!🎂🐾 Hope ${item.json[\"Pet_Name\"]} b'day would be full of treats, belly rubs, and successfully ignoring all commands while looking adorable. Thanks for keeping your humans well-trained - you're doing great! 🎉🐾`\n      }\n    });\n  }\n}\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "d062ddf3-0fab-4773-b89c-60027b46deff",
+      "name": "Code",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=Birthday Telegram for Your Home's Security Chief({{ $json.petName }})",
+        "message": "=Please tell <mark> {{ $json.petName }} </mark>!: Happy Birthday!🎂🐾 <br><br>\nHope {{ $json.petName }} b'day would be full of treats, belly rubs, and<br><br>successfully ignoring all commands while looking adorable. <br><br>\n\nThanks for keeping your humans well-trained - you're doing great! 🎉🐾 <br><br>\n\nWith Love:<br><br>\nDoggy ji and team",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        0
+      ],
+      "id": "2740cedf-1edc-4ac4-8e55-c50a6b6fd0d4",
+      "name": "Gmail",
+      "webhookId": "b5ccd7c3-6807-4cd1-b074-04cfeeeb260d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k80pQqowWBdiY8PB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "978bdb32-dc6c-464c-a386-6cc74ed06ed2",
+              "leftValue": "={{ $json.labelIds }}",
+              "rightValue": "SENT",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "d9c4ba29-4dce-4f15-a153-eebf6406709c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1baFn_L1Lbe8vOUtdcSMzbnYLSMqea8LoSzoUh9sVvPU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Billing_Phone": "={{ $('Code').item.json.Billing_Phone }}",
+            "Last_Birthday_Sent": "YES"
+          },
+          "matchingColumns": [
+            "Billing_Phone"
+          ],
+          "schema": [
+            {
+              "id": "Billing_Phone",
+              "displayName": "Billing_Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer_Email",
+              "displayName": "Customer_Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Customer_Name",
+              "displayName": "Customer_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Orders",
+              "displayName": "Orders",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Predicted_Next_Order",
+              "displayName": "Predicted_Next_Order",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Mail_Status",
+              "displayName": "Mail_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pet_Name",
+              "displayName": "Pet_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pet_DOB",
+              "displayName": "Pet_DOB",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last_Birthday_Sent",
+              "displayName": "Last_Birthday_Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_coupon_code",
+              "displayName": "last_coupon_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        990,
+        -100
+      ],
+      "id": "a537de36-2cea-4ec5-b5ca-7e8bbb563217",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-26T23:55:07.000Z",
+  "versionId": "6a0b6997-df6f-45a8-b814-3ddd3d677e3d"
+}
