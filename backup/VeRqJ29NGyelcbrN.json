@@ -1,0 +1,193 @@
+{
+  "active": false,
+  "connections": {
+    "Filter Valid Sessions": {
+      "main": [
+        [
+          {
+            "node": "Process Cart Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Cart Data": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid Carts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid Carts": {
+      "main": [
+        [
+          {
+            "node": "Send Abandonment Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every 30 Minutes": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid Sessions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-27T23:28:26.912Z",
+  "id": "VeRqJ29NGyelcbrN",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "abandon_cart",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "2b424e12-b588-4e8a-b6fe-d1f17694f9e2",
+      "name": "Every 30 Minutes",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.session_value}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "c7791804-7a81-47fb-961c-86788dc5b8a8",
+      "name": "Filter Valid Sessions",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const items = $input.all();\nconst processedCarts = [];\n\nfor (const item of items) {\n  const data = item.json;\n  \n  if (!data.session_value) continue;\n  \n  try {\n    const sessionData = data.session_value;\n    let customerEmail = '';\n    let customerName = '';\n    let cartTotal = 0;\n    let productCount = 0;\n    \n    // Extract customer email\n    const emailMatch = sessionData.match(/\"email\";s:\\d+:\"([^\"]*@[^\"]*\\.[^\"]*)\"/); \n    if (emailMatch && emailMatch[1]) {\n      customerEmail = emailMatch[1];\n    }\n    \n    // Extract customer name\n    const nameMatch = sessionData.match(/\"first_name\";s:\\d+:\"([^\"]*)\"/); \n    if (nameMatch && nameMatch[1]) {\n      customerName = nameMatch[1];\n    }\n    \n    // Extract cart total\n    const totalMatch = sessionData.match(/\"total\";s:\\d+:\"([\\d\\.]+)\"/); \n    if (totalMatch && totalMatch[1]) {\n      cartTotal = parseFloat(totalMatch[1]);\n    }\n    \n    // Count products\n    const productMatches = sessionData.match(/\"product_id\";i:(\\d+)/g);\n    if (productMatches) {\n      productCount = productMatches.length;\n    }\n    \n    if (customerEmail && (cartTotal > 0 || productCount > 0)) {\n      processedCarts.push({\n        session_key: data.session_key,\n        customer_email: customerEmail,\n        customer_name: customerName || 'Valued Customer',\n        cart_total: cartTotal.toFixed(2),\n        product_count: productCount,\n        abandoned_date: data.abandoned_date,\n        store_url: 'http://woocommerce-test.local',\n        cart_recovery_url: `http://woocommerce-test.local/cart?recover=${data.session_key}`\n      });\n    }\n    \n  } catch (error) {\n    console.log('Error processing session:', error);\n    continue;\n  }\n}\n\nreturn processedCarts.map(cart => ({ json: cart }));"
+      },
+      "id": "3a2ccd34-90e8-45c1-8a9c-1efece586cb3",
+      "name": "Process Cart Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        120,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.customer_email}}",
+              "operation": "isNotEmpty"
+            }
+          ],
+          "number": [
+            {
+              "value1": "={{$json.cart_total}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "id": "9e1be767-11c1-4bfa-9e7f-7f9ef3947c7c",
+      "name": "Filter Valid Carts",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@yourstore.com",
+        "toEmail": "={{$json.customer_email}}",
+        "subject": "Don't forget your items - Complete your purchase!",
+        "text": "Hi {{$json.customer_name}},\n\nYou left {{$json.product_count}} items in your cart worth ${{$json.cart_total}}.\n\nComplete your purchase here: {{$json.cart_recovery_url}}\n\nThanks!",
+        "options": {}
+      },
+      "id": "4500d1e3-453e-45e5-9b52-e1eddb37e337",
+      "name": "Send Abandonment Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -220
+      ],
+      "webhookId": "f314989a-aff4-4641-8ccf-227c8d050ae4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "wp_ac_abandoned_cart_history_lite",
+          "mode": "list",
+          "cachedResultName": "wp_ac_abandoned_cart_history_lite"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -320,
+        -220
+      ],
+      "id": "fe1cfa4d-4c10-4a5b-a06a-66c248cff576",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "jwnEQXiUh3wiUt6C",
+          "name": "MySQL account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-28T00:32:49.000Z",
+  "versionId": "5575e054-1a8f-44ec-ae65-cd0c92d121f9"
+}
