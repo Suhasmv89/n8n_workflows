@@ -1,0 +1,170 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-28T00:34:02.279Z",
+  "id": "LkZMYxsJGv5AkE5p",
+  "isArchived": false,
+  "meta": null,
+  "name": "My workflow 10",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e041e3e1-04f8-46be-a461-38fa1c5ccc4c",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.google.com/maps/search/{{ $json[\"search string\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "3563e24c-515a-476c-bbbe-15f427ca3aee",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Improved phone number scraping function for n8n Code node\nfunction extractPhoneNumbers(htmlContent) {\n  // More specific regex patterns for valid phone numbers\n  const phonePatterns = [\n    // Indian mobile numbers: +91-9876543210, +91 9876543210, 9876543210\n    /(?:\\+91[\\s\\-]?)?[6-9]\\d{9}(?!\\d)/g,\n    \n    // International mobile with country code\n    /\\+\\d{1,3}[\\s\\-]?[1-9]\\d{8,12}(?!\\d)/g,\n    \n    // Standard formats with separators\n    /(?:\\+91[\\s\\-]?)?(?:\\(0\\d{2,4}\\)|0\\d{2,4})[\\s\\-]?\\d{6,8}(?!\\d)/g,\n    \n    // US/International format: (123) 456-7890\n    /\\(\\d{3}\\)[\\s\\-]?\\d{3}[\\s\\-]?\\d{4}(?!\\d)/g,\n    \n    // Standard format: 123-456-7890, 123.456.7890\n    /\\d{3}[\\s\\-\\.]\\d{3}[\\s\\-\\.]\\d{4}(?!\\d)/g\n  ];\n  \n  const phoneNumbers = new Set();\n  \n  // Clean HTML tags and normalize whitespace\n  let textContent = htmlContent.replace(/<[^>]*>/g, ' ')\n                              .replace(/&nbsp;/g, ' ')\n                              .replace(/&amp;/g, '&')\n                              .replace(/&lt;/g, '<')\n                              .replace(/&gt;/g, '>')\n                              .replace(/\\s+/g, ' ');\n  \n  // Apply each pattern\n  phonePatterns.forEach(pattern => {\n    const matches = textContent.match(pattern);\n    if (matches) {\n      matches.forEach(match => {\n        const cleaned = match.trim();\n        \n        // Additional validation to filter out invalid numbers\n        if (isValidPhoneNumber(cleaned, textContent, match)) {\n          phoneNumbers.add(cleaned);\n        }\n      });\n    }\n  });\n  \n  return Array.from(phoneNumbers);\n}\n\nfunction isValidPhoneNumber(phone, fullText, originalMatch) {\n  // Remove all non-digit characters except +\n  const digitsOnly = phone.replace(/[^\\d+]/g, '');\n  const numbersOnly = digitsOnly.replace(/\\+/g, '');\n  \n  // Length check\n  if (numbersOnly.length < 10 || numbersOnly.length > 15) {\n    return false;\n  }\n  \n  // Invalid patterns to exclude\n  const invalidPatterns = [\n    // Sequential numbers\n    /123456789|987654321|111111111|000000000|999999999/,\n    \n    // Document/ID patterns\n    /^\\d{4}-\\d{2}-\\d{2}/, // Date format\n    /^\\d{13,}$/, // Very long numbers (likely IDs)\n    \n    // Coordinate-like patterns\n    /\\d+\\.\\d{6,}/, // Decimal coordinates\n    \n    // Common invalid sequences\n    /^0+$|^1+$|^2+$|^3+$|^4+$|^5+$|^6+$|^7+$|^8+$|^9+$/\n  ];\n  \n  // Check against invalid patterns\n  for (const pattern of invalidPatterns) {\n    if (pattern.test(digitsOnly)) {\n      return false;\n    }\n  }\n  \n  // Context-based filtering - exclude if found in suspicious contexts\n  const suspiciousContexts = [\n    'meta content',\n    'property=',\n    'content=\"',\n    'http://',\n    'https://',\n    'www.',\n    '.com',\n    '.org',\n    '.net',\n    'latitude',\n    'longitude',\n    'coordinates',\n    'client-id',\n    'user-id',\n    'document-id',\n    'version',\n    'timestamp'\n  ];\n  \n  // Get context around the phone number (50 chars before and after)\n  const matchIndex = fullText.indexOf(originalMatch);\n  const contextStart = Math.max(0, matchIndex - 50);\n  const contextEnd = Math.min(fullText.length, matchIndex + originalMatch.length + 50);\n  const context = fullText.substring(contextStart, contextEnd).toLowerCase();\n  \n  // Check if phone number appears in suspicious context\n  for (const suspiciousContext of suspiciousContexts) {\n    if (context.includes(suspiciousContext)) {\n      return false;\n    }\n  }\n  \n  // Indian mobile number validation\n  if (numbersOnly.length === 10 && /^[6-9]/.test(numbersOnly)) {\n    return true; // Valid Indian mobile\n  }\n  \n  // Indian mobile with country code\n  if (numbersOnly.length === 12 && numbersOnly.startsWith('91') && /^91[6-9]/.test(numbersOnly)) {\n    return true;\n  }\n  \n  // International numbers (basic validation)\n  if (digitsOnly.startsWith('+') && numbersOnly.length >= 10 && numbersOnly.length <= 15) {\n    return true;\n  }\n  \n  // US/Canada format\n  if (numbersOnly.length === 10 && /^[2-9]/.test(numbersOnly)) {\n    return true;\n  }\n  \n  return false;\n}\n\n// Main n8n code\nconst inputData = $input.all();\nconst results = [];\n\ninputData.forEach((item, index) => {\n  let htmlContent = '';\n  \n  // Extract HTML content from different possible locations\n  if (item.json.body) {\n    htmlContent = item.json.body;\n  } else if (item.json.data) {\n    htmlContent = item.json.data;\n  } else if (item.json.html) {\n    htmlContent = item.json.html;\n  } else if (typeof item.json === 'string') {\n    htmlContent = item.json;\n  } else {\n    htmlContent = JSON.stringify(item.json);\n  }\n  \n  // Extract phone numbers\n  const phoneNumbers = extractPhoneNumbers(htmlContent);\n  \n  // Additional filtering for very specific phone number patterns\n  const validPhoneNumbers = phoneNumbers.filter(phone => {\n    const cleaned = phone.replace(/[^\\d+]/g, '');\n    const digits = cleaned.replace(/\\+/g, '');\n    \n    // Final validation rules\n    return (\n      // Indian mobile: 10 digits starting with 6-9\n      (digits.length === 10 && /^[6-9]/.test(digits)) ||\n      // Indian with country code: +91 followed by 10 digits starting with 6-9\n      (digits.length === 12 && digits.startsWith('91') && /^91[6-9]/.test(digits)) ||\n      // International format with + and proper length\n      (cleaned.startsWith('+') && digits.length >= 10 && digits.length <= 15 && /^[1-9]/.test(digits.substring(cleaned.startsWith('+91') ? 2 : cleaned.startsWith('+1') ? 1 : 1)))\n    );\n  });\n  \n  results.push({\n    json: {\n      index: index,\n      phoneNumbers: validPhoneNumbers,\n      phoneCount: validPhoneNumbers.length,\n      url: item.json.url || 'Unknown URL' // Include URL for reference\n    }\n  });\n});\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "f8df4672-86e0-4484-a0aa-5c170ad45b9b",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "formTitle": "Lead Gen",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "search string",
+              "placeholder": "pet store in bangalore",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        140
+      ],
+      "id": "b2e7d302-4341-45e4-ac41-04374ca1541e",
+      "name": "On form submission",
+      "webhookId": "1e07f172-b45f-43bf-81ac-a367e821d600"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "completed",
+        "completionMessage": "={{ $json.phoneNumbers }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "8b57e7f9-dc3f-420b-9132-9dfdb74dc33c",
+      "name": "Form",
+      "webhookId": "205a5fca-8127-4c9c-bc6c-6cde4c7816ee"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Phone number scraping function for n8n Code node - Individual items output\nfunction extractPhoneNumbers(htmlContent) {\n  // More specific regex patterns for valid phone numbers\n  const phonePatterns = [\n    // Indian mobile numbers: +91-9876543210, +91 9876543210, 9876543210\n    /(?:\\+91[\\s\\-]?)?[6-9]\\d{9}(?!\\d)/g,\n    \n    // International mobile with country code\n    /\\+\\d{1,3}[\\s\\-]?[1-9]\\d{8,12}(?!\\d)/g,\n    \n    // Standard formats with separators\n    /(?:\\+91[\\s\\-]?)?(?:\\(0\\d{2,4}\\)|0\\d{2,4})[\\s\\-]?\\d{6,8}(?!\\d)/g,\n    \n    // US/International format: (123) 456-7890\n    /\\(\\d{3}\\)[\\s\\-]?\\d{3}[\\s\\-]?\\d{4}(?!\\d)/g,\n    \n    // Standard format: 123-456-7890, 123.456.7890\n    /\\d{3}[\\s\\-\\.]\\d{3}[\\s\\-\\.]\\d{4}(?!\\d)/g\n  ];\n  \n  const phoneNumbers = new Set();\n  \n  // Clean HTML tags and normalize whitespace\n  let textContent = htmlContent.replace(/<[^>]*>/g, ' ')\n                              .replace(/&nbsp;/g, ' ')\n                              .replace(/&amp;/g, '&')\n                              .replace(/&lt;/g, '<')\n                              .replace(/&gt;/g, '>')\n                              .replace(/\\s+/g, ' ');\n  \n  // Apply each pattern\n  phonePatterns.forEach(pattern => {\n    const matches = textContent.match(pattern);\n    if (matches) {\n      matches.forEach(match => {\n        const cleaned = match.trim();\n        \n        // Additional validation to filter out invalid numbers\n        if (isValidPhoneNumber(cleaned, textContent, match)) {\n          phoneNumbers.add(cleaned);\n        }\n      });\n    }\n  });\n  \n  return Array.from(phoneNumbers);\n}\n\nfunction isValidPhoneNumber(phone, fullText, originalMatch) {\n  // Remove all non-digit characters except +\n  const digitsOnly = phone.replace(/[^\\d+]/g, '');\n  const numbersOnly = digitsOnly.replace(/\\+/g, '');\n  \n  // Length check\n  if (numbersOnly.length < 10 || numbersOnly.length > 15) {\n    return false;\n  }\n  \n  // Invalid patterns to exclude\n  const invalidPatterns = [\n    // Sequential numbers\n    /123456789|987654321|111111111|000000000|999999999/,\n    \n    // Document/ID patterns\n    /^\\d{4}-\\d{2}-\\d{2}/, // Date format\n    /^\\d{13,}$/, // Very long numbers (likely IDs)\n    \n    // Coordinate-like patterns\n    /\\d+\\.\\d{6,}/, // Decimal coordinates\n    \n    // Common invalid sequences\n    /^0+$|^1+$|^2+$|^3+$|^4+$|^5+$|^6+$|^7+$|^8+$|^9+$/\n  ];\n  \n  // Check against invalid patterns\n  for (const pattern of invalidPatterns) {\n    if (pattern.test(digitsOnly)) {\n      return false;\n    }\n  }\n  \n  // Context-based filtering - exclude if found in suspicious contexts\n  const suspiciousContexts = [\n    'meta content',\n    'property=',\n    'content=\"',\n    'http://',\n    'https://',\n    'www.',\n    '.com',\n    '.org',\n    '.net',\n    'latitude',\n    'longitude',\n    'coordinates',\n    'client-id',\n    'user-id',\n    'document-id',\n    'version',\n    'timestamp'\n  ];\n  \n  // Get context around the phone number (50 chars before and after)\n  const matchIndex = fullText.indexOf(originalMatch);\n  const contextStart = Math.max(0, matchIndex - 50);\n  const contextEnd = Math.min(fullText.length, matchIndex + originalMatch.length + 50);\n  const context = fullText.substring(contextStart, contextEnd).toLowerCase();\n  \n  // Check if phone number appears in suspicious context\n  for (const suspiciousContext of suspiciousContexts) {\n    if (context.includes(suspiciousContext)) {\n      return false;\n    }\n  }\n  \n  // Indian mobile number validation\n  if (numbersOnly.length === 10 && /^[6-9]/.test(numbersOnly)) {\n    return true; // Valid Indian mobile\n  }\n  \n  // Indian mobile with country code\n  if (numbersOnly.length === 12 && numbersOnly.startsWith('91') && /^91[6-9]/.test(numbersOnly)) {\n    return true;\n  }\n  \n  // International numbers (basic validation)\n  if (digitsOnly.startsWith('+') && numbersOnly.length >= 10 && numbersOnly.length <= 15) {\n    return true;\n  }\n  \n  // US/Canada format\n  if (numbersOnly.length === 10 && /^[2-9]/.test(numbersOnly)) {\n    return true;\n  }\n  \n  return false;\n}\n\n// Function to normalize phone number format\nfunction normalizePhoneNumber(phone) {\n  // Remove all non-digit characters except +\n  const digitsOnly = phone.replace(/[^\\d+]/g, '');\n  \n  // If it's an Indian number without country code, add +91\n  if (digitsOnly.length === 10 && /^[6-9]/.test(digitsOnly)) {\n    return `+91${digitsOnly}`;\n  }\n  \n  // If it already has country code, ensure it starts with +\n  if (digitsOnly.length > 10 && !digitsOnly.startsWith('+')) {\n    return `+${digitsOnly}`;\n  }\n  \n  return digitsOnly.startsWith('+') ? digitsOnly : `+${digitsOnly}`;\n}\n\n// Main n8n code - Creates individual items for each phone number\nconst inputData = $input.all();\nconst results = [];\n\ninputData.forEach((item, inputIndex) => {\n  let htmlContent = '';\n  let sourceUrl = '';\n  \n  // Extract HTML content and URL from different possible locations\n  if (item.json.body) {\n    htmlContent = item.json.body;\n  } else if (item.json.data) {\n    htmlContent = item.json.data;\n  } else if (item.json.html) {\n    htmlContent = item.json.html;\n  } else if (typeof item.json === 'string') {\n    htmlContent = item.json;\n  } else {\n    htmlContent = JSON.stringify(item.json);\n  }\n  \n  // Extract source URL\n  sourceUrl = item.json.url || item.json.source || `Input Item ${inputIndex + 1}`;\n  \n  // Extract phone numbers\n  const phoneNumbers = extractPhoneNumbers(htmlContent);\n  \n  // Additional filtering for very specific phone number patterns\n  const validPhoneNumbers = phoneNumbers.filter(phone => {\n    const cleaned = phone.replace(/[^\\d+]/g, '');\n    const digits = cleaned.replace(/\\+/g, '');\n    \n    // Final validation rules\n    return (\n      // Indian mobile: 10 digits starting with 6-9\n      (digits.length === 10 && /^[6-9]/.test(digits)) ||\n      // Indian with country code: +91 followed by 10 digits starting with 6-9\n      (digits.length === 12 && digits.startsWith('91') && /^91[6-9]/.test(digits)) ||\n      // International format with + and proper length\n      (cleaned.startsWith('+') && digits.length >= 10 && digits.length <= 15 && /^[1-9]/.test(digits.substring(cleaned.startsWith('+91') ? 2 : cleaned.startsWith('+1') ? 1 : 1)))\n    );\n  });\n  \n  // Create individual output items for each phone number\n  validPhoneNumbers.forEach((phone, phoneIndex) => {\n    results.push({\n      json: {\n        phoneNumber: phone,\n        normalizedPhone: normalizePhoneNumber(phone),\n        source: sourceUrl,\n        inputIndex: inputIndex,\n        phoneIndex: phoneIndex + 1,\n        totalPhonesFromSource: validPhoneNumbers.length,\n        extractedAt: new Date().toISOString()\n      }\n    });\n  });\n});\n\n// If no phone numbers found, return empty result with info\nif (results.length === 0) {\n  results.push({\n    json: {\n      message: \"No valid phone numbers found\",\n      totalInputs: inputData.length,\n      extractedAt: new Date().toISOString()\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "26d65b7d-ffdc-4306-bfe3-7d2d82928a7e",
+      "name": "Code",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-28T05:19:52.000Z",
+  "versionId": "b3166a69-ab6a-4926-bcdb-e3c8951438d9"
+}
