@@ -1,17 +1,6 @@
 {
   "active": false,
   "connections": {
-    "When clicking ‘Execute workflow’": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "HTTP Request": {
       "main": [
         [
@@ -27,7 +16,12 @@
       "main": [
         [
           {
-            "node": "Form",
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
@@ -55,34 +49,36 @@
           }
         ]
       ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2025-08-28T00:34:02.279Z",
   "id": "LkZMYxsJGv5AkE5p",
   "isArchived": false,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "name": "My workflow 10",
   "nodes": [
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        0,
-        0
-      ],
-      "id": "e041e3e1-04f8-46be-a461-38fa1c5ccc4c",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
       "parameters": {
-        "url": "=https://www.google.com/maps/search/{{ $json[\"search string\"] }}",
+        "url": "=https://www.google.com/maps/search/{{ $json[\"Search keyword\"] }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        220,
+        120,
         0
       ],
       "id": "3563e24c-515a-476c-bbbe-15f427ca3aee",
@@ -95,7 +91,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        660,
+        560,
         0
       ],
       "id": "f8df4672-86e0-4484-a0aa-5c170ad45b9b",
@@ -107,41 +103,30 @@
         "formFields": {
           "values": [
             {
-              "fieldLabel": "search string",
+              "fieldLabel": "Search keyword",
               "placeholder": "pet store in bangalore",
               "requiredField": true
             }
           ]
         },
-        "responseMode": "lastNode",
-        "options": {}
+        "responseMode": "=onReceived",
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Response is updated in google sheets"
+            }
+          }
+        }
       },
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.2,
       "position": [
         -100,
-        140
+        0
       ],
       "id": "b2e7d302-4341-45e4-ac41-04374ca1541e",
       "name": "On form submission",
       "webhookId": "1e07f172-b45f-43bf-81ac-a367e821d600"
-    },
-    {
-      "parameters": {
-        "operation": "completion",
-        "completionTitle": "completed",
-        "completionMessage": "={{ $json.phoneNumbers }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.form",
-      "typeVersion": 1,
-      "position": [
-        880,
-        0
-      ],
-      "id": "8b57e7f9-dc3f-420b-9132-9dfdb74dc33c",
-      "name": "Form",
-      "webhookId": "205a5fca-8127-4c9c-bc6c-6cde4c7816ee"
     },
     {
       "parameters": {
@@ -150,12 +135,90 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
+        340,
         0
       ],
       "id": "26d65b7d-ffdc-4306-bfe3-7d2d82928a7e",
       "name": "Code",
       "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1P5QGEYxYoJfswhJH1MLZe8qYMHOm8s4sE1uQ_7PsPzw/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "title": "={{ $('On form submission').item.json[\"Search keyword\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        780,
+        0
+      ],
+      "id": "05b9b114-5522-4b59-88f4-47c07182b91e",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        140
+      ],
+      "id": "a0d049fb-e827-4d07-8919-e1221babb7f9",
+      "name": "Wait",
+      "webhookId": "3fe91f39-96b7-4af2-a3c0-e006f33453c6"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1P5QGEYxYoJfswhJH1MLZe8qYMHOm8s4sE1uQ_7PsPzw/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('On form submission').item.json[\"Search keyword\"] }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        920,
+        140
+      ],
+      "id": "cf417ebb-02df-437e-bfc9-c4cf0d0ffa51",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oiWhzThVRrIrZewd",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -165,6 +228,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-28T05:19:52.000Z",
-  "versionId": "b3166a69-ab6a-4926-bcdb-e3c8951438d9"
+  "updatedAt": "2025-08-28T14:00:51.000Z",
+  "versionId": "d5fcd1cd-9875-428f-a2ec-160747ab86a9"
 }
