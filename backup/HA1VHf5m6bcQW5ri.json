@@ -1,7 +1,83 @@
 {
   "active": false,
   "connections": {
-    "Schedule Trigger": {
+    "Get Daily Sales Data": {
+      "main": [
+        [
+          {
+            "node": "format_sales_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Top Products": {
+      "main": [
+        [
+          {
+            "node": "format_product_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Yesterday Data": {
+      "main": [
+        [
+          {
+            "node": "format_yesterday_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Sales Data": {
+      "main": [
+        [
+          {
+            "node": "Check Low Revenue Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "create_html_summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Low Revenue Alert": {
+      "main": [
+        [
+          {
+            "node": "low_sales_notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Process Sales Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "trigger_9_pm": {
       "main": [
         [
           {
@@ -22,94 +98,7 @@
         ]
       ]
     },
-    "Get Daily Sales Data": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Top Products": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Yesterday Data": {
-      "main": [
-        [
-          {
-            "node": "Code2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Process Sales Data": {
-      "main": [
-        [
-          {
-            "node": "Check Low Revenue Alert",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Code3",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send Slack Notification",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Check Low Revenue Alert": {
-      "main": [
-        [
-          {
-            "node": "Gmail1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Handle Error": {
-      "main": [
-        [
-          {
-            "node": "Send Error Alert",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge": {
-      "main": [
-        [
-          {
-            "node": "Process Sales Data",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
+    "format_sales_data": {
       "main": [
         [
           {
@@ -120,7 +109,7 @@
         ]
       ]
     },
-    "Code1": {
+    "format_product_data": {
       "main": [
         [
           {
@@ -131,7 +120,7 @@
         ]
       ]
     },
-    "Code2": {
+    "format_yesterday_data": {
       "main": [
         [
           {
@@ -142,11 +131,11 @@
         ]
       ]
     },
-    "Code3": {
+    "create_html_summary": {
       "main": [
         [
           {
-            "node": "Gmail",
+            "node": "send_summary_to_gmail",
             "type": "main",
             "index": 0
           }
@@ -157,29 +146,11 @@
   "createdAt": "2025-08-26T23:56:29.553Z",
   "id": "HA1VHf5m6bcQW5ri",
   "isArchived": false,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "name": "daily_sales_summary",
   "nodes": [
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "hours",
-              "hoursInterval": 24
-            }
-          ]
-        }
-      },
-      "id": "3cff3b2a-35d2-46c8-af40-9819dadaa287",
-      "name": "Schedule Trigger",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -440,
-        220
-      ]
-    },
     {
       "parameters": {
         "operation": "executeQuery",
@@ -272,7 +243,7 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
       "position": [
-        880,
+        660,
         220
       ],
       "webhookId": "755277a3-5d89-493d-a45d-84a3db6c2e48",
@@ -319,33 +290,87 @@
     },
     {
       "parameters": {
-        "jsCode": "// Error handling and logging\nconst error = $input.first().json;\nconst errorMessage = error.message || error.error || 'Unknown error occurred';\n\nconsole.error('Daily Sales Report Error:', errorMessage);\n\nreturn [{\n  json: {\n    subject: '❌ Daily Sales Report Failed',\n    message: `The daily sales report failed to generate on ${new Date().toLocaleDateString()}. \\n\\nError Details: ${errorMessage}\\n\\nPlease check the n8n workflow and database connection.`,\n    timestamp: new Date().toISOString(),\n    error: errorMessage\n  }\n}];"
+        "numberInputs": 3
       },
-      "id": "a790f040-7513-4329-9ba0-4ff9174b4192",
-      "name": "Handle Error",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
       "position": [
-        -440,
-        680
+        220,
+        220
       ],
-      "onError": "continueRegularOutput"
+      "id": "445ec168-f87f-4a74-bca4-9afd62253e29",
+      "name": "Merge"
     },
     {
       "parameters": {
-        "subject": "={{$json.subject}}",
-        "options": {}
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 21
+            }
+          ]
+        }
       },
-      "id": "72407ebd-6425-4b69-977d-5d6c1501ef67",
-      "name": "Send Error Alert",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2.1,
+      "id": "3cff3b2a-35d2-46c8-af40-9819dadaa287",
+      "name": "trigger_9_pm",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
       "position": [
-        -220,
-        680
+        -440,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({\n  json: { ...item.json, _source: 'daily_sales' }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        20
       ],
-      "webhookId": "269a8b19-b021-472b-b292-0f295fb6ea12",
-      "disabled": true
+      "id": "106e0773-610b-4bd2-b4ac-f51daa98477d",
+      "name": "format_sales_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({\n  json: { ...item.json, _source: 'top_products' }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        220
+      ],
+      "id": "eb3613be-9d54-4d57-b0b6-673cf90cf209",
+      "name": "format_product_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({\n  json: { ...item.json, _source: 'yesterday_data' }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        420
+      ],
+      "id": "327d8a47-2d2b-4211-a70c-d8f9ccf37042",
+      "name": "format_yesterday_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Example input JSON (this usually comes from a previous node)\nconst data = $json;\n\n// Build HTML string\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Daily Sales Report</title>\n  <style>\n    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; color: #333; }\n    .container { max-width: 800px; margin: 0 auto; background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }\n    .header h1 { margin: 0; font-size: 28px; font-weight: 300; }\n    .header p { margin: 10px 0 0 0; opacity: 0.9; font-size: 16px; }\n    .content { padding: 30px; }\n    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }\n    .metric-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; transition: transform 0.2s ease; }\n    .metric-card:hover { transform: translateY(-2px); }\n    .metric-card h3 { margin: 0 0 8px 0; color: #666; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }\n    .metric-card .value { font-size: 24px; font-weight: bold; color: #333; margin: 0; }\n    .growth { font-size: 12px; margin-top: 5px; padding: 2px 6px; border-radius: 12px; display: inline-block; }\n    .growth.positive { background-color: #d4edda; color: #155724; }\n    .growth.negative { background-color: #f8d7da; color: #721c24; }\n    .products-section { margin-top: 30px; }\n    .products-section h2 { color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px; }\n    .products-table { width: 100%; border-collapse: collapse; margin-top: 10px; }\n    .products-table th { background-color: #667eea; color: white; padding: 12px; text-align: left; font-weight: 500; }\n    .products-table td { padding: 12px; border-bottom: 1px solid #eee; }\n    .products-table tr:hover { background-color: #f8f9fa; }\n    .no-data { text-align: center; padding: 40px; color: #666; font-style: italic; }\n    .footer { background-color: #f8f9fa; padding: 20px 30px; text-align: center; color: #666; font-size: 12px; border-top: 1px solid #eee; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>${data.performanceEmoji || ''} Daily Sales Report</h1>\n      <p>${data.date || ''}</p>\n    </div>\n    \n    <div class=\"content\">\n      ${data.hasOrders ? `\n        <div class=\"metrics-grid\">\n          <div class=\"metric-card\">\n            <h3>Total Orders</h3>\n            <p class=\"value\">${data.totalOrders}</p>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Total Revenue</h3>\n            <p class=\"value\">${data.totalRevenue}</p>\n            <span class=\"growth ${data.revenueGrowth > 0 ? 'positive' : 'negative'}\">\n              ${data.growthDirection} ${data.revenueGrowth}% vs yesterday\n            </span>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Average Order Value</h3>\n            <p class=\"value\">${data.avgOrderValue}</p>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Unique Customers</h3>\n            <p class=\"value\">${data.uniqueCustomers}</p>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Order Range</h3>\n            <p class=\"value\" style=\"font-size: 16px;\">\n              <strong>High:</strong> ${data.highestOrder}<br>\n              <strong>Low:</strong> ${data.lowestOrder}\n            </p>\n          </div>\n        </div>\n\n        ${data.topProducts && data.topProducts.length ? `\n          <div class=\"products-section\">\n            <h2>🏆 Top Performing Products</h2>\n            <table class=\"products-table\">\n              <thead>\n                <tr>\n                  <th>Product Name</th>\n                  <th>Units Sold</th>\n                  <th>Revenue</th>\n                  <th>Orders</th>\n                </tr>\n              </thead>\n              <tbody>\n                ${data.topProducts.map(p => `\n                  <tr>\n                    <td><strong>${p.name}</strong></td>\n                    <td>${p.units}</td>\n                    <td>${p.revenue}</td>\n                    <td>${p.orders}</td>\n                  </tr>\n                `).join('')}\n              </tbody>\n            </table>\n          </div>\n        ` : ''}\n      ` : `\n        <div class=\"no-data\">\n          <h2>📊 No Sales Today</h2>\n          <p>No orders were processed today. This might be normal for weekends or holidays.</p>\n        </div>\n      `}\n    </div>\n    \n    <div class=\"footer\">\n      <p>Daily Sales Report • Generated automatically at ${data.shortDate || ''} 11:59 PM</p>\n      <p>This report includes all orders placed today in your local timezone.</p>\n    </div>\n  </div>\n</body>\n</html>\n`;\n\n// Return HTML\nreturn [{ json: { html } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        20
+      ],
+      "id": "8f32b3df-7821-4383-b9be-a87a8f43950e",
+      "name": "create_html_summary"
     },
     {
       "parameters": {
@@ -361,7 +386,7 @@
         20
       ],
       "id": "9b101c17-491f-4c81-8976-68a25458f3c3",
-      "name": "Gmail",
+      "name": "send_summary_to_gmail",
       "webhookId": "fd27f6ce-2226-4c57-8348-b7ffc9fa06fd",
       "credentials": {
         "gmailOAuth2": {
@@ -384,7 +409,7 @@
         420
       ],
       "id": "c0c5b680-9fc7-4d04-91ec-3daf3ab76cc8",
-      "name": "Gmail1",
+      "name": "low_sales_notification",
       "webhookId": "fd27f6ce-2226-4c57-8348-b7ffc9fa06fd",
       "credentials": {
         "gmailOAuth2": {
@@ -395,68 +420,18 @@
     },
     {
       "parameters": {
-        "numberInputs": 3
+        "content": "## Daily sales summary\nThis workflow creates an automated Daily Sales Summary system that fetches data from a PostgreSQL database, processes it into a structured report, and delivers insights through Slack notifications and email summaries. The workflow runs every day at 9 PM, ensuring stakeholders receive timely updates on orders, revenue, and top-performing products. It also includes an alert mechanism for low sales days.",
+        "height": 720,
+        "width": 1580
       },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
       "position": [
-        220,
-        220
+        -520,
+        -100
       ],
-      "id": "445ec168-f87f-4a74-bca4-9afd62253e29",
-      "name": "Merge"
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.all().map(item => ({\n  json: { ...item.json, _source: 'daily_sales' }\n}));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        0,
-        20
-      ],
-      "id": "106e0773-610b-4bd2-b4ac-f51daa98477d",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.all().map(item => ({\n  json: { ...item.json, _source: 'top_products' }\n}));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        0,
-        220
-      ],
-      "id": "eb3613be-9d54-4d57-b0b6-673cf90cf209",
-      "name": "Code1"
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.all().map(item => ({\n  json: { ...item.json, _source: 'yesterday_data' }\n}));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        0,
-        420
-      ],
-      "id": "327d8a47-2d2b-4211-a70c-d8f9ccf37042",
-      "name": "Code2"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Example input JSON (this usually comes from a previous node)\nconst data = $json;\n\n// Build HTML string\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Daily Sales Report</title>\n  <style>\n    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; color: #333; }\n    .container { max-width: 800px; margin: 0 auto; background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }\n    .header h1 { margin: 0; font-size: 28px; font-weight: 300; }\n    .header p { margin: 10px 0 0 0; opacity: 0.9; font-size: 16px; }\n    .content { padding: 30px; }\n    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }\n    .metric-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; transition: transform 0.2s ease; }\n    .metric-card:hover { transform: translateY(-2px); }\n    .metric-card h3 { margin: 0 0 8px 0; color: #666; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }\n    .metric-card .value { font-size: 24px; font-weight: bold; color: #333; margin: 0; }\n    .growth { font-size: 12px; margin-top: 5px; padding: 2px 6px; border-radius: 12px; display: inline-block; }\n    .growth.positive { background-color: #d4edda; color: #155724; }\n    .growth.negative { background-color: #f8d7da; color: #721c24; }\n    .products-section { margin-top: 30px; }\n    .products-section h2 { color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px; }\n    .products-table { width: 100%; border-collapse: collapse; margin-top: 10px; }\n    .products-table th { background-color: #667eea; color: white; padding: 12px; text-align: left; font-weight: 500; }\n    .products-table td { padding: 12px; border-bottom: 1px solid #eee; }\n    .products-table tr:hover { background-color: #f8f9fa; }\n    .no-data { text-align: center; padding: 40px; color: #666; font-style: italic; }\n    .footer { background-color: #f8f9fa; padding: 20px 30px; text-align: center; color: #666; font-size: 12px; border-top: 1px solid #eee; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>${data.performanceEmoji || ''} Daily Sales Report</h1>\n      <p>${data.date || ''}</p>\n    </div>\n    \n    <div class=\"content\">\n      ${data.hasOrders ? `\n        <div class=\"metrics-grid\">\n          <div class=\"metric-card\">\n            <h3>Total Orders</h3>\n            <p class=\"value\">${data.totalOrders}</p>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Total Revenue</h3>\n            <p class=\"value\">${data.totalRevenue}</p>\n            <span class=\"growth ${data.revenueGrowth > 0 ? 'positive' : 'negative'}\">\n              ${data.growthDirection} ${data.revenueGrowth}% vs yesterday\n            </span>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Average Order Value</h3>\n            <p class=\"value\">${data.avgOrderValue}</p>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Unique Customers</h3>\n            <p class=\"value\">${data.uniqueCustomers}</p>\n          </div>\n          <div class=\"metric-card\">\n            <h3>Order Range</h3>\n            <p class=\"value\" style=\"font-size: 16px;\">\n              <strong>High:</strong> ${data.highestOrder}<br>\n              <strong>Low:</strong> ${data.lowestOrder}\n            </p>\n          </div>\n        </div>\n\n        ${data.topProducts && data.topProducts.length ? `\n          <div class=\"products-section\">\n            <h2>🏆 Top Performing Products</h2>\n            <table class=\"products-table\">\n              <thead>\n                <tr>\n                  <th>Product Name</th>\n                  <th>Units Sold</th>\n                  <th>Revenue</th>\n                  <th>Orders</th>\n                </tr>\n              </thead>\n              <tbody>\n                ${data.topProducts.map(p => `\n                  <tr>\n                    <td><strong>${p.name}</strong></td>\n                    <td>${p.units}</td>\n                    <td>${p.revenue}</td>\n                    <td>${p.orders}</td>\n                  </tr>\n                `).join('')}\n              </tbody>\n            </table>\n          </div>\n        ` : ''}\n      ` : `\n        <div class=\"no-data\">\n          <h2>📊 No Sales Today</h2>\n          <p>No orders were processed today. This might be normal for weekends or holidays.</p>\n        </div>\n      `}\n    </div>\n    \n    <div class=\"footer\">\n      <p>Daily Sales Report • Generated automatically at ${data.shortDate || ''} 11:59 PM</p>\n      <p>This report includes all orders placed today in your local timezone.</p>\n    </div>\n  </div>\n</body>\n</html>\n`;\n\n// Return HTML\nreturn [{ json: { html } }];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        540,
-        20
-      ],
-      "id": "8f32b3df-7821-4383-b9be-a87a8f43950e",
-      "name": "Code3"
+      "id": "a50a5669-fe25-4239-a81e-6af7c2188156",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -466,6 +441,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-27T08:56:26.000Z",
-  "versionId": "07a94676-cc7b-4cda-86bf-3ca6b9d83d2f"
+  "updatedAt": "2025-09-05T00:14:07.000Z",
+  "versionId": "5d2c338d-8191-4483-9fcd-d35a6eeeb6e6"
 }
