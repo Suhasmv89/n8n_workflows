@@ -13,17 +13,6 @@
         ]
       ]
     },
-    "Gmail": {
-      "main": [
-        [
-          {
-            "node": "update_inventory",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "trigger_daily_9am": {
       "main": [
         [
@@ -61,7 +50,7 @@
       "main": [
         [
           {
-            "node": "Gmail",
+            "node": "send_gmail_ntofication",
             "type": "main",
             "index": 0
           }
@@ -85,6 +74,17 @@
           }
         ]
       ]
+    },
+    "send_gmail_ntofication": {
+      "main": [
+        [
+          {
+            "node": "update_inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2025-08-26T05:51:28.709Z",
@@ -95,29 +95,6 @@
   },
   "name": "lowstock_notification_and_reorder",
   "nodes": [
-    {
-      "parameters": {
-        "sendTo": "suhas.mv89@gmail.com",
-        "subject": "Auto-reorder ",
-        "message": "=Stock for Product {{ $('read_inventory').item.json.SKU }} is below {{ $json.Quantity }} units ",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        140,
-        80
-      ],
-      "id": "3d3b6689-06e6-4fa8-b0e8-77c3781eb936",
-      "name": "Gmail",
-      "webhookId": "1b803033-b517-4c09-b249-29b1390b83b4",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "k80pQqowWBdiY8PB",
-          "name": "Gmail account"
-        }
-      }
-    },
     {
       "parameters": {
         "options": {}
@@ -312,6 +289,44 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "sendTo": "suhas.mv89@gmail.com",
+        "subject": "Auto-reorder ",
+        "message": "=Stock for Product {{ $('read_inventory').item.json.SKU }} is below {{ $json.Quantity }} units ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        140,
+        80
+      ],
+      "id": "3d3b6689-06e6-4fa8-b0e8-77c3781eb936",
+      "name": "send_gmail_ntofication",
+      "webhookId": "1b803033-b517-4c09-b249-29b1390b83b4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k80pQqowWBdiY8PB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## lowstock_notification\nDaily at 9 AM, the workflow checks stock levels in Google Sheets, emails a reorder alert for low-quantity SKUs, and updates the sheet to mark them as notified.",
+        "height": 480,
+        "width": 1600
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1000,
+        0
+      ],
+      "id": "2b053168-e177-45d2-859e-ec5cc8d8587d",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -321,6 +336,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-26T08:02:32.000Z",
-  "versionId": "f325be9f-1947-4bce-b0df-588c84f1fecf"
+  "updatedAt": "2025-09-06T00:35:15.000Z",
+  "versionId": "96fb9087-b51f-45f7-af2e-b1fba199948b"
 }
