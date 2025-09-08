@@ -97,7 +97,7 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "name": "invoice_notification",
+  "name": "inventory_update_notification",
   "nodes": [
     {
       "parameters": {
@@ -350,6 +350,22 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## Inventory Update & Notifications\nThis workflow listens for new Shopify orders, updates product inventory in Google Sheets, and sends real-time notifications to customers and the internal team. It ensures stock levels are always synchronized and stakeholders are instantly informed.",
+        "height": 660,
+        "width": 1540,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -260
+      ],
+      "id": "df65617e-4e29-4941-a5aa-f3796a462ecf",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -359,6 +375,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-26T05:45:38.000Z",
-  "versionId": "169451b3-d725-4122-a8be-48fca46e4671"
+  "updatedAt": "2025-09-07T23:48:11.000Z",
+  "versionId": "346b0601-5bcd-4cdc-a92a-f9218be1cbdc"
 }
