@@ -268,7 +268,7 @@
       "typeVersion": 2.2,
       "position": [
         -1320,
-        180
+        100
       ],
       "id": "47a019c2-4355-4547-9ed5-38a864d59fd4",
       "name": "On form submission",
@@ -283,8 +283,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -940,
-        180
+        -1100,
+        100
       ],
       "id": "a3c8db94-2c50-46a4-9b8e-294e29f18d1f",
       "name": "Extract from File"
@@ -298,8 +298,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        -160,
-        -320
+        -880,
+        -400
       ],
       "id": "bc2a28a7-a2c5-4a01-b87a-212a0a52de26",
       "name": "AI Agent"
@@ -312,8 +312,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -72,
-        -100
+        -792,
+        -180
       ],
       "id": "af71180e-b4c6-41f1-926a-4b48b9a7a972",
       "name": "Ollama Chat Model",
@@ -334,8 +334,8 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        500,
-        -160
+        532,
+        -300
       ],
       "id": "c7715450-302d-4a18-b07d-50694531efe4",
       "name": "Read/Write Files from Disk"
@@ -344,13 +344,13 @@
       "parameters": {
         "content": "## Flow Builder Leg\nBuilds ACE12 message flow skeleton",
         "height": 440,
-        "width": 2100
+        "width": 2320
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -682,
-        -400
+        -844,
+        -480
       ],
       "id": "6331c129-f154-412f-ae54-57698420fd73",
       "name": "Sticky Note"
@@ -372,8 +372,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        -160,
-        180
+        -880,
+        0
       ],
       "id": "55587216-5164-4e96-b4e1-2b949b3b1bab",
       "name": "Basic LLM Chain"
@@ -408,8 +408,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        660,
-        180
+        92,
+        100
       ],
       "id": "bd323b79-3829-417d-a58f-af225f18ec0a",
       "name": "Create_Queue_Http_Req",
@@ -428,8 +428,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -72,
-        400
+        -792,
+        220
       ],
       "id": "91d3423d-489b-4ce5-8717-5004ee307f5b",
       "name": "Ollama Chat Model1",
@@ -444,14 +444,14 @@
       "parameters": {
         "content": "## Queue Creation leg",
         "height": 440,
-        "width": 1680,
+        "width": 1360,
         "color": 3
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -680,
-        100
+        -940,
+        -80
       ],
       "id": "27fb19e1-3660-4843-8f36-33b98005b5d0",
       "name": "Sticky Note1"
@@ -463,8 +463,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        216,
-        180
+        -426,
+        100
       ],
       "id": "97574793-8728-4576-a80f-125cacd54b30",
       "name": "Code"
@@ -476,8 +476,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        436,
-        180
+        -128,
+        100
       ],
       "id": "7ecb902d-fe96-451e-86b4-46ffae4cc8f7",
       "name": "Loop Over Items"
@@ -491,8 +491,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        -340,
-        720
+        -504,
+        400
       ],
       "id": "cb81da94-d3ed-4ae4-9f5d-fc3fba95b173",
       "name": "Basic LLM Chain1"
@@ -505,8 +505,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -320,
-        900
+        -416,
+        620
       ],
       "id": "706ac97a-36b7-4700-98c0-568e97972b11",
       "name": "Ollama Chat Model2",
@@ -526,8 +526,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        40,
-        720
+        -128,
+        400
       ],
       "id": "bf238e7e-1042-460b-a235-fe9c1be5b3a6",
       "name": "Convert to File1"
@@ -542,8 +542,8 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        280,
-        720
+        92,
+        400
       ],
       "id": "8b7e8855-d673-404e-91c0-f39246e6714d",
       "name": "Read/Write Files from Disk1"
@@ -557,8 +557,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -680,
-        580
+        -955,
+        340
       ],
       "id": "d4a9095d-517e-439e-811f-975dbdb5fb27",
       "name": "Sticky Note2"
@@ -570,8 +570,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        900,
-        -160
+        972,
+        -300
       ],
       "id": "d2c2d179-5314-4fd6-9da9-1fc1c34f8ea8",
       "name": "Code3"
@@ -586,8 +586,8 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1160,
-        -160
+        1192,
+        -300
       ],
       "id": "d82b47eb-3175-4feb-8b4b-53360ff6dbcd",
       "name": "Read/Write Files from Disk2"
@@ -597,8 +597,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -620,
-        720
+        -802,
+        400
       ],
       "id": "ee37bf2d-8620-4aea-bfda-44eaa7968c4c",
       "name": "Wait",
@@ -612,8 +612,8 @@
       "type": "n8n-nodes-base.xml",
       "typeVersion": 1,
       "position": [
-        380,
-        -400
+        -426,
+        -300
       ],
       "id": "4ebeea07-a41b-447c-ac85-156334875528",
       "name": "Parse to XML"
@@ -635,8 +635,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        600,
-        -400
+        -128,
+        -300
       ],
       "id": "1e538ac1-ea78-422c-8e1b-7a46f53145f6",
       "name": "Set application_Name"
@@ -648,8 +648,8 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        820,
-        -400
+        92,
+        -300
       ],
       "id": "c3154a9d-d37e-4da3-bbc8-33dfdd5f8038",
       "name": "Create_Folder"
@@ -661,8 +661,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        260,
-        -160
+        312,
+        -300
       ],
       "id": "f6dff78a-9a8a-4dc8-b636-45885a3578d8",
       "name": "Create_Binary_File"
@@ -674,8 +674,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        720,
-        -160
+        752,
+        -300
       ],
       "id": "263cf8ee-3156-40a3-828a-e21723aa62aa",
       "name": "Create_Default_Project_File"
@@ -726,6 +726,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-08-06T01:26:05.000Z",
-  "versionId": "e622bf02-6913-42cd-96d8-211c83ee58a2"
+  "updatedAt": "2025-09-08T00:02:34.000Z",
+  "versionId": "8cde8ec7-385a-485e-90e7-cbbe2b46c1da"
 }
