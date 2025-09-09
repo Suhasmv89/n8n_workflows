@@ -1,0 +1,294 @@
+{
+  "active": false,
+  "connections": {
+    "Start at 9:16": {
+      "main": [
+        [
+          {
+            "node": "Get FINNIFTY Options",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get FINNIFTY Options": {
+      "main": [
+        [
+          {
+            "node": "Find Call & Put Near 50",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Call & Put Near 50": {
+      "main": [
+        [
+          {
+            "node": "Sell Call & Put",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Monitor Every 1m": {
+      "main": [
+        [
+          {
+            "node": "Get Latest Prices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Latest Prices": {
+      "main": [
+        [
+          {
+            "node": "Check Stoploss",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Stoploss": {
+      "main": [
+        [
+          {
+            "node": "Exit (Stoploss Hit)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exit at 3:25": {
+      "main": [
+        [
+          {
+            "node": "Exit (Time Based)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-09-08T14:30:42.853Z",
+  "id": "tbsGQcQ8BsNQWMzG",
+  "isArchived": false,
+  "meta": null,
+  "name": "My workflow 11",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 9,
+              "minute": 16
+            }
+          ]
+        }
+      },
+      "name": "Start at 9:16",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -300
+      ],
+      "id": "1f8df3aa-f29b-44ee-952f-2fe38d65e23d"
+    },
+    {
+      "parameters": {
+        "url": "https://api.dhan.co/instruments",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "access-token",
+              "value": "YOUR_DHAN_API_KEY"
+            },
+            {
+              "name": "client-id",
+              "value": "YOUR_CLIENT_ID"
+            }
+          ]
+        }
+      },
+      "name": "Get FINNIFTY Options",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -300
+      ],
+      "id": "dfea66ec-d22c-4cc0-a335-0f06ab5dfe70"
+    },
+    {
+      "parameters": {
+        "functionCode": "const options = items[0].json.data || items[0].json || [];\nif (!Array.isArray(options)) {\n  return [{ json: { error: 'Options not array', raw: items[0].json } }];\n}\nconst today = new Date().toISOString().split('T')[0];\nconst finniftyOptions = options.filter(o => (o.symbol || '').toUpperCase().includes('FINNIFTY') && (o.expiryDate || '').startsWith(today));\nfunction closestTo50(arr, type) {\n  const filtered = arr.filter(o => ((o.optionType || '').toUpperCase() === type.toUpperCase()));\n  if (filtered.length === 0) return null;\n  return filtered.reduce((prev, curr) => Math.abs((curr.lastPrice || 0) - 50) < Math.abs((prev.lastPrice || 0) - 50) ? curr : prev);\n}\nconst call = closestTo50(finniftyOptions, 'CE');\nconst put = closestTo50(finniftyOptions, 'PE');\nreturn [{ json: { call, put, entryCombined: (call?.lastPrice || 0) + (put?.lastPrice || 0) } }];"
+      },
+      "name": "Find Call & Put Near 50",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        540,
+        -300
+      ],
+      "id": "db08186c-5056-485d-811d-7b2d1ff2cda4"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.dhan.co/orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"orders\":[{\"transactionType\":\"SELL\",\"symbol\":\"{{$json[\"call\"].symbol}}\",\"quantity\":25},{\"transactionType\":\"SELL\",\"symbol\":\"{{$json[\"put\"].symbol}}\",\"quantity\":25}]}"
+      },
+      "name": "Sell Call & Put",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -300
+      ],
+      "id": "1bc8dda5-5ac9-4109-8808-1a624442a7c7"
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Monitor Every 1m",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -40
+      ],
+      "id": "5e466ba7-ec11-49e0-968c-f0631b9745ab"
+    },
+    {
+      "parameters": {
+        "url": "={{\"https://api.dhan.co/quotes?symbols=\" + $json.call.symbol + \",\" + $json.put.symbol}}",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "access-token",
+              "value": "YOUR_DHAN_API_KEY"
+            },
+            {
+              "name": "client-id",
+              "value": "YOUR_CLIENT_ID"
+            }
+          ]
+        }
+      },
+      "name": "Get Latest Prices",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -40
+      ],
+      "id": "8bfe10c7-45c4-4d4f-a9f6-69af8da8b981"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ ($json[\"call\"].lastPrice || 0) + ($json[\"put\"].lastPrice || 0) }}",
+              "operation": "larger",
+              "value2": "={{ $json[\"entryCombined\"] * 1.5 }}"
+            }
+          ]
+        }
+      },
+      "name": "Check Stoploss",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        540,
+        -40
+      ],
+      "id": "0386c5f0-27df-473c-8b6f-da47b7f24396"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.dhan.co/orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"orders\":[{\"transactionType\":\"BUY\",\"symbol\":\"{{$json[\"call\"].symbol}}\",\"quantity\":25},{\"transactionType\":\"BUY\",\"symbol\":\"{{$json[\"put\"].symbol}}\",\"quantity\":25}]}"
+      },
+      "name": "Exit (Stoploss Hit)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -40
+      ],
+      "id": "c2857c3e-4d96-4005-8368-7b5d0e69006d"
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 15,
+              "minute": 25
+            }
+          ]
+        }
+      },
+      "name": "Exit at 3:25",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        100,
+        220
+      ],
+      "id": "4575f9e0-36e5-4668-99fd-114b61fc6ced"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.dhan.co/orders",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\"orders\":[{\"transactionType\":\"BUY\",\"symbol\":\"{{$json[\"call\"].symbol}}\",\"quantity\":25},{\"transactionType\":\"BUY\",\"symbol\":\"{{$json[\"put\"].symbol}}\",\"quantity\":25}]}"
+      },
+      "name": "Exit (Time Based)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        220
+      ],
+      "id": "82de1951-fb74-4037-ba16-d87d449ad9cc"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-09-08T14:35:33.000Z",
+  "versionId": "d7fde8a2-78f8-4cbb-8b65-3cd9671fc64d"
+}
