@@ -1,0 +1,734 @@
+{
+  "active": false,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse to XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Queue_Http_Req": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Create_Queue_Http_Req",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Create_Default_Project_File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse to XML": {
+      "main": [
+        [
+          {
+            "node": "Set application_Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set application_Name": {
+      "main": [
+        [
+          {
+            "node": "Create_Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Folder": {
+      "main": [
+        [
+          {
+            "node": "Create_Binary_File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Binary_File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Default_Project_File": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-09-18T04:42:27.234Z",
+  "id": "p8zt59J75mCB8LuR",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "bot_brew_github",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "ACE Automation",
+        "formDescription": "AI-assisted ACE 12 development. Requires requirenment pdf as input, converts the requirenment into ACE application with the help of AI and automation.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Requirement Doc",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "You can view your message flow in local folder"
+            }
+          }
+        },
+        "path": "107db6ad-7fe3-4700-a5fb-afd68ed34f22"
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -1320,
+        100
+      ],
+      "id": "50684553-beaf-4527-bd23-90268a1bd0fb",
+      "name": "On form submission",
+      "webhookId": "107db6ad-7fe3-4700-a5fb-afd68ed34f22"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Requirement_Doc",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        100
+      ],
+      "id": "47790d92-f5ff-4117-813b-4d336cb69cef",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert in IBM App Connect message flows.\n\nYou will be given a Component Specification describing nodes of a message flow. Based on this, generate an XML in the following format:\n\n<?xml version=\"1.0\" ?>\n<ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput.msgnode=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute.msgnode=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput.msgnode=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"{MessageFlowName}.msgflow\" nsPrefix=\"{MessageFlowName}.msgflow\">\n  <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n    <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n    <translation xmi:type=\"utility:TranslatableString\" key=\"{MessageFlowName}\" bundleName=\"{MessageFlowName}\" pluginId=\"{MessageFlowName}\"/>\n    <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/{MessageFlowName}/icons/full/obj16/{MessageFlowName}.gif\"/>\n    <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/{MessageFlowName}/icons/full/obj30/{MessageFlowName}.gif\"/>\n    <composition>\n      {NodesXML}\n      {ConnectionsXML}\n    </composition>\n    <stickyBoard>\n      <stickyNote location=\"25,25\">\n        <body xmi:type=\"utility:ConstantString\" string=\"Auto-generated message flow.\"/>\n      </stickyNote>\n    </stickyBoard>\n    <propertyOrganizer/>\n  </eClassifiers>\n</ecore:EPackage>\n\nRules:\n- Replace {MessageFlowName} with the flow name provided (strip '.mfw' if present).\n- For each node:\n  - If Node Type is 'MQInput':\n    <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" queueName=\"{QueueName}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n  - If Node Type is 'Compute':\n    <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" computeMode=\"{ComputeMode}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n  - If Node Type is 'MQOutput':\n    <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_{NodeIndex}\" location=\"{XPosition},150\" queueName=\"{QueueName}\">\n      <translation xmi:type=\"utility:ConstantString\" string=\"{NodeName}\"/>\n    </nodes>\n\n- Start XPosition at 25 and increment by 150 for each node.\n- NodeIndex starts from 1.\n- Connections: sequentially connect nodes in order of NodeIndex, example:\n  <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_{ConnectionIndex}\" sourceNode=\"FCMComposite_1_{SourceNodeIndex}\" targetNode=\"FCMComposite_1_{TargetNodeIndex}\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n\n- Include <stickyNote> with text: \"Auto-generated message flow.\"\n\nInput:\n{{ $json.text }}\n\nOutput:\nOutput only the completed XML structure. Do not include any explanation or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        -400
+      ],
+      "id": "745904e9-97fb-44f7-b403-733eed572e29",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -792,
+        -180
+      ],
+      "id": "46266c79-fdf0-43be-9d62-193bf00f91b1",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "zhJUjQLO4OnrQysr",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ 'C:/Personal/n8n/'+$('Set application_Name').item.json.application_Name +'/' + $('Set application_Name').item.json.application_Name + '.msgflow' }}",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        532,
+        -300
+      ],
+      "id": "0daa24a8-bb46-4a74-ac10-4290f990aff6",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "content": "## Flow Builder Leg\nBuilds ACE12 message flow skeleton",
+        "height": 440,
+        "width": 2320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -844,
+        -480
+      ],
+      "id": "61da1d30-d380-4fcd-ae45-7fb03837c184",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an assistant that reads software requirement documents and extracts MQ administrative actions based on queue configuration sections.\n\nThe input{{ $json.text }} will be text extracted from a PDF. Focus specifically on the section titled **\"4.4 Queue Details\"**. Ignore everything else.\n\nYour goal is to extract each queue and return its associated MQ administrative action in the following JSON format:\n\n{\n  \"action\": \"create\",\n  \"queue_name\": \"SPCT.ACCSILT.FINTEXTENDED.OUT\",\n  \"queue_manager\": \"QM1\"\n}\n\n### Instructions:\n- Always assume `action` is `\"create\"` unless the text explicitly mentions delete or update.\n- Use the queue name for both `queue_name` and `queue_manager` if no separate queue manager is mentioned.\n- Return one JSON object per queue found in the \"4.4 Queue Details\" section.\n- Do not include any extra text, only return an array of valid JSON objects matching this schema:\n```json\n[{\n  \"type\": \"object\",\n  \"properties\": {\n    \"action\": {\n      \"type\": \"string\",\n      \"enum\": [\"delete\", \"create\", \"update\"]\n    },\n    \"queue_name\": {\n      \"type\": \"string\",\n      \"minLength\": 1\n    },\n    \"queue_manager\": {\n      \"type\": \"string\",\n      \"minLength\": 1\n    }\n  },\n  \"required\": [\"action\", \"queue_name\", \"queue_manager\"],\n  \"additionalProperties\": false\n}]\n Output:\nOutput only the completed JSON structure. Do not include any explanation or extra text.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an assistant that extracts MQ admin actions from natural language. Convert the user's input into JSON with keys: action, queue_name, queue_manager."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -880,
+        0
+      ],
+      "id": "5af6540d-1d79-412a-8ae7-46fcbef2905a",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://127.0.0.1:9443/ibmmq/rest/v1/admin/qmgr/{{ $json.queue_manager }}/queue\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "ibm-mq-rest-csrf-token",
+              "value": "1122"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n   \"name\": \"{{ $json.queue_name }}\",\n   \"type\": \"local\",\n   \"events\" : {\n      \"depth\" : {\n          \"highEnabled\" : true,\n          \"highPercentage\" : 75\n       }\n    },\n   \"storage\" : {\n      \"maximumDepth\" : 1000\n   }\n} ",
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        92,
+        100
+      ],
+      "id": "b5a7d7ec-877d-4f71-a313-a5a3d7e5e68e",
+      "name": "Create_Queue_Http_Req",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "uYupxuEi7ZaFmdXW",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "=mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -792,
+        220
+      ],
+      "id": "4a1ef2a8-cec1-402c-bb32-236a8b2400b0",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "zhJUjQLO4OnrQysr",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Queue Creation leg",
+        "height": 440,
+        "width": 1360,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -940,
+        -80
+      ],
+      "id": "2dc4c0ec-a389-4799-ad43-ec9380d81b24",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const parsed = JSON.parse($json.text);\nreturn parsed.map(item => ({ json: item }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -426,
+        100
+      ],
+      "id": "09bc788a-68c3-4e96-b659-d3d76a018fc8",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -128,
+        100
+      ],
+      "id": "5fd5d191-8d01-4b80-a94c-9017cdc4a9bd",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert in IBM App Connect Enterprise (ACE) ESQL development.\n\nGenerate complete and correct ESQL code for a Compute Module to transform XML input into JSON output using IBM ACE ESQL syntax. Do not generate any extra characters at the start and end of the output.Do not wrap the output in triple backticks (```).\n\nRequirements:\n- The Compute Module must be named XMLToJSONConverter\n- Use the standard ACE ESQL structure\n- The input XML is available under InputRoot.XMLNSC.{root_element}\n- The output JSON must be written to OutputRoot.JSON.Data\n- Use:\n  DECLARE inputRef REFERENCE TO InputRoot.XMLNSC.{root_element};\n  DECLARE outputRef REFERENCE TO OutputRoot.JSON.Data;\n- Do NOT use XPath-like expressions such as inputRef./person/field\n- Instead, use inputRef.field\n- For each mapping, use this syntax exactly:\n  CREATE FIELD outputRef.<json_field> VALUE inputRef.<xml_element>;\n- Use CAST(... AS INTEGER) for numeric fields if required\n- Start with CREATE COMPUTE MODULE and end with END MODULE;\n- Do NOT output any Markdown, SQL, or XPath syntax\n- Output should be pure, correct ESQL only\n- Do NOT output explanations. Just the ESQL code block\n\nExample format:\n\nCREATE COMPUTE MODULE XMLToJSONConverter\n    CREATE FUNCTION Main() RETURNS BOOLEAN\n    BEGIN\n        DECLARE inputRef REFERENCE TO InputRoot.XMLNSC.{root_element};\n        DECLARE outputRef REFERENCE TO OutputRoot.JSON.Data;\n\n        -- Map fields from XML to JSON\n        CREATE FIELD outputRef.<json_field> VALUE inputRef.<xml_element>;\n        CREATE FIELD outputRef.<json_field> VALUE CAST(inputRef.<xml_element> AS INTEGER);\n\n        RETURN TRUE;\n    END;\nEND MODULE;\n\nMappings to use:use 4.5 Mapping Specification from {{ $json.text }}\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -504,
+        400
+      ],
+      "id": "dda1b3f2-42ac-4c07-9af2-3af520de3e53",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        620
+      ],
+      "id": "202067da-ec36-4f13-b647-7a003f8f44a3",
+      "name": "Ollama Chat Model2",
+      "credentials": {
+        "ollamaApi": {
+          "id": "zhJUjQLO4OnrQysr",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -128,
+        400
+      ],
+      "id": "cfde322f-ee82-4f80-bd1d-d11fccd032b9",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ 'C:/Personal/n8n/'+ $('Extract from File').item.json.text.match(/flow (\\w+)\\.mfw/)[1] +'/' + $('Extract from File').item.json.text.match(/flow (\\w+)\\.mfw/)[1]  + '.esql' }}",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        92,
+        400
+      ],
+      "id": "a64a5f0d-50d8-48ce-9042-b1e1d50c2ba3",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "content": "## Mapping Leg \n",
+        "height": 420,
+        "width": 1300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -955,
+        340
+      ],
+      "id": "a6c00934-9cf1-4992-b4a6-b4ae31ba909c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const xmlContent =$input.first().json.content;\n\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(xmlContent).toString('base64'),\n        mimeType: 'application/xml',\n        fileName: '.project',\n      },\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        972,
+        -300
+      ],
+      "id": "2f40fe3d-3f8c-47f7-9481-15ea24f3db06",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ 'C:/Personal/n8n/'+$('Set application_Name').item.json.application_Name +'/' + '.project' }}",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1192,
+        -300
+      ],
+      "id": "fa472200-2629-4847-b240-5d34fc077040",
+      "name": "Read/Write Files from Disk2"
+    },
+    {
+      "parameters": {
+        "path": "80245e09-47ea-4d8b-a486-5cdd0ef6a701"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -802,
+        400
+      ],
+      "id": "dca8fac3-e490-4d69-b537-726cbbe51924",
+      "name": "Wait",
+      "webhookId": "80245e09-47ea-4d8b-a486-5cdd0ef6a701"
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "=output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        -426,
+        -300
+      ],
+      "id": "95fab969-9a05-413b-b389-d784d1df5d73",
+      "name": "Parse to XML"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3b18f05b-c251-4f8e-aba1-194410bedaa7",
+              "name": "application_Name",
+              "value": "={{ $json['ecore:EPackage'].nsURI.replace('.msgflow','') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -128,
+        -300
+      ],
+      "id": "4de9c1c9-6012-4de7-855f-8c29a0ec5ed2",
+      "name": "Set application_Name"
+    },
+    {
+      "parameters": {
+        "command": "={{ 'if not exist \"C:\\\\Personal\\\\n8n\\\\' + $('Set application_Name').item.json.application_Name + '\" mkdir \"C:\\\\Personal\\\\n8n\\\\' + $('Set application_Name').item.json.application_Name + '\"' }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        92,
+        -300
+      ],
+      "id": "a4cd03f9-b03c-4b63-afb4-dae8cac1db7d",
+      "name": "Create_Folder"
+    },
+    {
+      "parameters": {
+        "jsCode": "const xmlContent = $('AI Agent').first().json.output;\n\nreturn [\n  {\n    json: {},\n    binary: {\n      data: {\n        data: Buffer.from(xmlContent).toString('base64'),\n        mimeType: 'application/xml',\n        fileName: 'flow.msgflow',\n      },\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        312,
+        -300
+      ],
+      "id": "be52c82a-eb27-4792-8902-4a3fb078bd12",
+      "name": "Create_Binary_File"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      fileName: $('Set application_Name').first().json.application_Name + '.xml',\n      content: `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<projectDescription>\n\t<name>${$('Set application_Name').first().json.application_Name}</name>\n\t<comment></comment>\n\t<projects>\n\t</projects>\n\t<buildSpec>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.applibresourcevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.connector.policy.ui.PolicyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.applib.mbprojectbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mlibdfdlbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.adapters.adapterbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.sca.scabuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.mbprojectresourcesbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.esql.lang.esqllangbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.map.builder.mslmappingbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowxsltbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.flow.msgflowbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.decision.service.ui.decisionservicerulebuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.pattern.capture.PatternBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.json.builder.JSONBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.restapi.ui.restApiDefinitionsBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.policy.ui.policybuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.msg.assembly.messageAssemblyBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.msg.validation.dfdl.dfdlqnamevalidator</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.bar.ext.barbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>com.ibm.etools.mft.unittest.ui.TestCaseBuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t</buildSpec>\n\t<natures>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.applicationNature</nature>\n\t\t<nature>com.ibm.etools.msgbroker.tooling.messageBrokerProjectNature</nature>\n\t</natures>\n</projectDescription>`\n\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        -300
+      ],
+      "id": "254d4c7f-9377-49a1-97c9-a7135f77cad6",
+      "name": "Create_Default_Project_File"
+    }
+  ],
+  "pinData": {
+    "AI Agent": [
+      {
+        "json": {
+          "output": "<?xml version=\"1.0\" ?>\n   <ecore:EPackage xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:eflow=\"http://www.ibm.com/wbi/2005/eflow\" xmlns:utility=\"http://www.ibm.com/wbi/2005/eflow_utility\" xmlns:ComIbmMQInput.msgnode=\"ComIbmMQInput.msgnode\" xmlns:ComIbmCompute.msgnode=\"ComIbmCompute.msgnode\" xmlns:ComIbmMQOutput.msgnode=\"ComIbmMQOutput.msgnode\" xmi:version=\"2.0\" nsURI=\"AccSlfFinTxExtendedRouting.msgflow\" nsPrefix=\"AccSlfFinTxExtendedRouting.msgflow\">\n     <eClassifiers xmi:type=\"eflow:FCMComposite\" name=\"FCMComposite_1\">\n       <eSuperTypes href=\"http://www.ibm.com/wbi/2005/eflow#//FCMBlock\"/>\n       <translation xmi:type=\"utility:TranslatableString\" key=\"AccSlfFinTxExtendedRouting\" bundleName=\"AccSlfFinTxExtendedRouting\" pluginId=\"AccSlfFinTxExtendedRouting\"/>\n       <colorGraphic16 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj16/AccSlfFinTxExtendedRouting.gif\"/>\n       <colorGraphic32 xmi:type=\"utility:GIFFileGraphic\" resourceName=\"platform:/plugin/AccSlfFinTxExtendedRouting/icons/full/obj30/AccSlfFinTxExtendedRouting.gif\"/>\n       <composition>\n         <nodes xmi:type=\"ComIbmMQInput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_1\" location=\"25,150\" queueName=\"ACCSTL.FINTEXTENDED.IN\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"ACCSTL.FINTEXTENDED.IN\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmCompute.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_2\" location=\"25,300\" computeMode=\"Message\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"AccSlfFinTxExtendedRouting\"/>\n         </nodes>\n         <nodes xmi:type=\"ComIbmMQOutput.msgnode:FCMComposite_1\" xmi:id=\"FCMComposite_1_3\" location=\"25,450\" queueName=\"SPCT.ACCSTL.FINTEXTENDED.OUT\">\n           <translation xmi:type=\"utility:ConstantString\" string=\"SPCT.ACCSTL.FINTEXTENDED.OUT\"/>\n         </nodes>\n      <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_1\" sourceNode=\"FCMComposite_1_1\" targetNode=\"FCMComposite_1_2\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/>\n     <connections xmi:type=\"eflow:FCMConnection\" xmi:id=\"FCMConnection_2\" sourceNode=\"FCMComposite_1_2\" targetNode=\"FCMComposite_1_3\" sourceTerminalName=\"OutTerminal.out\" targetTerminalName=\"InTerminal.in\"/> \n </composition>\n       <stickyBoard>\n         <stickyNote location=\"25,25\">\n           <body xmi:type=\"utility:ConstantString\" string=\"Auto-generated message flow.\"/>\n         </stickyNote>\n       </stickyBoard>\n       <propertyOrganizer/>\n     </eClassifiers>\n   </ecore:EPackage>"
+        }
+      }
+    ],
+    "Basic LLM Chain": [
+      {
+        "json": {
+          "text": "[\n      {\n        \"action\": \"create\",\n        \"queue_name\": \"ACCSTL.FINTEXTENDED.IN\",\n        \"queue_manager\": \"QM1\"\n      },\n      {\n        \"action\": \"create\",\n        \"queue_name\": \"SPCT.ACCSTL.FINTEXTENDED.OUT\",\n        \"queue_manager\": \"QM1\"\n      }\n    ]"
+        }
+      }
+    ],
+    "Code": [
+      {
+        "json": {
+          "action": "create",
+          "queue_name": "ACCSTL.FINTEXTENDED.IN",
+          "queue_manager": "QM1"
+        }
+      },
+      {
+        "json": {
+          "action": "create",
+          "queue_name": "SPCT.ACCSTL.FINTEXTENDED.OUT",
+          "queue_manager": "QM1"
+        }
+      }
+    ],
+    "Basic LLM Chain1": [
+      {
+        "json": {
+          "text": "CREATE COMPUTE MODULE XMLToJSONConverter\n       CREATE FUNCTION Main() RETURNS BOOLEAN\n       BEGIN\n           DECLARE inputRef REFERENCE TO InputRoot.XMLNSC.{root_element};\n           DECLARE outputRef REFERENCE TO OutputRoot.JSON.Data;\n\n           -- Map fields from XML to JSON\n           CREATE FIELD outputRef.name VALUE inputRef.person.name;\n           CREATE FIELD outputRef.street VALUE inputRef.person.address.street;\n           CREATE FIELD outputRef.age VALUE CAST(inputRef.person.age AS INTEGER);\n\n           RETURN TRUE;\n       END;\n   END MODULE;"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-09-18T04:42:27.234Z",
+  "versionId": "0d29388a-791a-4de2-939e-fa963f9411b9"
+}
